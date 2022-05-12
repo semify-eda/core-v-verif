@@ -40,6 +40,10 @@
 #
 ###############################################################################
 
+CV_SW_PREFIX := riscv32-corev-elf-
+# change this to path where TOOLCHAIN is stored
+CV_SW_TOOLCHAIN := /opt/openhw_riscv
+
 # "Constants"
 MAKE           = make
 MAKE_DIR       = $(PWD)

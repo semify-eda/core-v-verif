@@ -92,9 +92,8 @@ module cv32e40x_tb_wrapper
          .mtvec_addr_i           ( '0                    ), // TODO
          .dm_halt_addr_i         ( DM_HALTADDRESS        ),
          .mhartid_i              ( HART_ID               ),
-         .mimpid_i               ( IMP_ID                ),
+         .mimpid_patch_i               ( IMP_ID                ),
          .dm_exception_addr_i    ( '0                    ), // TODO
-         .nmi_addr_i             ( '0                    ), // TODO
 
          // Instruction memory interface
          .instr_req_o            ( instr_req             ),
@@ -137,14 +136,17 @@ module cv32e40x_tb_wrapper
 
          .clic_irq_i             (  1'b0                 ), // TODO
          .clic_irq_id_i          ( 12'h0                 ), // TODO
-         .clic_irq_il_i          (  8'h0                 ), // TODO
+         //.clic_irq_il_i          (  8'h0                 ), // TODO
          .clic_irq_priv_i        (  2'h0                 ), // TODO
-         .clic_irq_hv_i          (  1'b0                 ), // TODO
-         .clic_irq_id_o          (                       ), // TODO
-         .clic_irq_mode_o        (                       ),
-         .clic_irq_exit_o        (                       ),
+        // .clic_irq_hv_i          (  1'b0                 ), // TODO
+         //.clic_irq_id_o          (                       ), // TODO
+         //.clic_irq_mode_o        (                       ),
+         //.clic_irq_exit_o        (                       ),
+         //new pins
+         .clic_irq_level_i (8'h0),
+         .clic_irq_shv_i (1'h0),
 
-
+         //these interrupt interface outputs do not exist anymore seemingly
          
          // Fencei flush handshake
          .fencei_flush_req_o     (                       ),
