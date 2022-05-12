@@ -66,6 +66,13 @@ int main(int argc, char **argv, char **env)
     while (!Verilated::gotFinish()) {
         if (t > 40)
             top->rst_ni = 1;
+
+        if (t > 10000)
+        {
+          top->rst_ni = 0;
+          break; //breaking for now cuz otherwise endless sim
+        }
+
         top->clk_i = !top->clk_i;
         top->eval();
 #ifdef VCD_TRACE

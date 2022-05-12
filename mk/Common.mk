@@ -425,22 +425,22 @@ endif
 	@echo "* Generating hexfile, readelf and objdump files"
 	@echo "$(BANNER)"
 	$(RISCV_EXE_PREFIX)objcopy -O verilog \
-		$< \
-		$@
-	$(RISCV_EXE_PREFIX)readelf -a $< > $*.readelf
+		.$< \
+		.$@
+	$(RISCV_EXE_PREFIX)readelf -a .$< > .$*.readelf
 	$(RISCV_EXE_PREFIX)objdump \
 		-d \
 		-M no-aliases \
 		-M numeric \
 		-S \
-		$*.elf > $*.objdump
+		.$*.elf > .$*.objdump
 	$(RISCV_EXE_PREFIX)objdump \
     	-d \
         -S \
 		-M no-aliases \
 		-M numeric \
         -l \
-		$*.elf | ${CORE_V_VERIF}/bin/objdump2itb - > $*.itb
+		.$*.elf | ${CORE_V_VERIF}/bin/objdump2itb - > .$*.itb
 
 # Patterned targets to generate ELF.  Used only if explicit targets do not match.
 #
@@ -479,13 +479,13 @@ ifeq ($(TEST_FIXED_ELF),1)
 	@echo "* Copying fixed ELF test program to $(@)"
 	@echo "$(BANNER)"
 	mkdir -p $(SIM_TEST_PROGRAM_RESULTS)
-	cp $(TEST_TEST_DIR)/$(TEST).elf $@
+	cp $(TEST_TEST_DIR)/$(TEST).elf .$@
 else
 %.elf: $(TEST_FILES)
 	mkdir -p $(SIM_TEST_PROGRAM_RESULTS)
 	make bsp
 	@echo "$(BANNER)"
-	@echo "* Compiling test-program $@"
+	@echo "* Compiling test-program .$@"
 	@echo "$(BANNER)"
 	$(RISCV_EXE_PREFIX)$(RISCV_CC) \
 		$(CFG_CFLAGS) \
@@ -493,7 +493,7 @@ else
 		$(RISCV_CFLAGS) \
 		-I $(ASM) \
 		-I $(BSP) \
-		-o $@ \
+		-o .$@ \
 		-nostartfiles \
 		$(TEST_FILES) \
 		-T $(LD_FILE) \

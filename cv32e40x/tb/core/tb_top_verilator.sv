@@ -35,7 +35,7 @@ module tb_top_verilator
         automatic int prog_size = 6;
 
         if($value$plusargs("firmware=%s", firmware)) begin
-            if($test$plusargs("verbose"))
+           // if($test$plusargs("verbose"))
                 $display("[TESTBENCH] %t: loading firmware %0s ...",
                          $time, firmware);
             $readmemh(firmware, cv32e40x_tb_wrapper_i.ram_i.dp_ram_i.mem);

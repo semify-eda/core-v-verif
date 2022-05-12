@@ -40,9 +40,17 @@
 #
 ###############################################################################
 
+##############################################################################
+# Added defines for tolchain paths ans prefix
 CV_SW_PREFIX := riscv32-corev-elf-
 # change this to path where TOOLCHAIN is stored
 CV_SW_TOOLCHAIN := /opt/openhw_riscv
+TEST := "hello-world"
+SIM_TEST_PROGRAM_RESULTS := ./hello-world
+SIM_BSP_RESULTS := ./test_binary
+RISCV_MARCH := 
+##############################################################################
+
 
 # "Constants"
 MAKE           = make
@@ -51,7 +59,9 @@ MAKE_PATH     := $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 COREV_PROJ     = cv32
 CORE_V_VERIF   = $(abspath $(MAKE_PATH)/../../..)
 DATE           = $(shell date +%F)
-WAVES          = 0
+
+#waves enalbels vcd for gtkwave
+WAVES          = 1
 
 CV_CORE       ?= CV32E40X
 CV_CORE_LC     = $(shell echo $(CV_CORE) | tr A-Z a-z)
@@ -480,8 +490,9 @@ veri-test: verilate $(VERI_CUSTOM)/$(TEST)/$(TEST).hex
 	@echo "$(BANNER)"
 	mkdir -p $(VERI_LOG_DIR)
 	./testbench_verilator $(VERI_FLAGS) \
-		"+firmware=$(VERI_CUSTOM)/$(TEST)/$(TEST).hex" \
+		"+firmware=.$(VERI_CUSTOM)/$(TEST)/$(TEST).hex" \
 		| tee $(VERI_LOG_DIR)/$(TEST).log
+	gtkwave ./verilator_tb.vcd	
 
 # verilator specific cleanup
 veri-clean: verilate-clean
