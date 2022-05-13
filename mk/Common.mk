@@ -435,7 +435,7 @@ endif
 		-S \
 		.$*.elf > .$*.objdump
 	$(RISCV_EXE_PREFIX)objdump \
-    	-d \
+		-d \
         -S \
 		-M no-aliases \
 		-M numeric \
@@ -450,9 +450,9 @@ endif
 # For directed tests, TEST_FILES gathers all of the .S and .c files in a test directory
 # For corev_ tests, TEST_FILES will only point to the specific .S for the RUN_INDEX and TEST_NAME provided to make
 ifeq ($(shell echo $(TEST) | head -c 6),corev_)
-TEST_FILES        = $(filter %.c %.S,$(wildcard  $(SIM_TEST_PROGRAM_RESULTS)/$(TEST_NAME)$(OPT_RUN_INDEX_SUFFIX).S))
+TEST_FILES        ?= $(filter %.c %.S,$(wildcard  $(SIM_TEST_PROGRAM_RESULTS)/$(TEST_NAME)$(OPT_RUN_INDEX_SUFFIX).S))
 else
-TEST_FILES        = $(filter %.c %.S,$(wildcard  $(TEST_TEST_DIR)/*))
+TEST_FILES        ?= $(filter %.c %.S,$(wildcard  $(TEST_TEST_DIR)/*))
 endif
 
 # If a test defines "default_cflags" in its yaml, then it is responsible to define ALL flags

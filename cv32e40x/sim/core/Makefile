@@ -48,7 +48,10 @@ CV_SW_TOOLCHAIN := /opt/openhw_riscv
 TEST := "hello-world"
 SIM_TEST_PROGRAM_RESULTS := ./hello-world
 SIM_BSP_RESULTS := ./test_binary
-RISCV_MARCH := 
+CV_SW_MARCH := rv32im
+ASM = ../../../../C #set
+PATH_TO_C_FILES = ../../../../C/
+TEST_FILES = $(PATH_TO_C_FILES)/main.c $(PATH_TO_C_FILES)/rle.c $(PATH_TO_C_FILES)/data.c
 ##############################################################################
 
 
