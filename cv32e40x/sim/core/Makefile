@@ -52,6 +52,8 @@ CV_SW_MARCH := rv32im
 ASM = ../../../../C #set
 PATH_TO_C_FILES = ../../../../C/
 TEST_FILES = $(PATH_TO_C_FILES)/main.c $(PATH_TO_C_FILES)/rle.c $(PATH_TO_C_FILES)/data.c
+
+CORE_SIM = VSIM # empty means verilator
 ##############################################################################
 
 
@@ -204,8 +206,19 @@ CV_CORE_RTLSRC  := $(filter-out $(CV_CORE_PKG)/rtl/$(CV_CORE_LC)_register_file_l
 # FIXME: temporarily using a local manifest for the core.
 #        This is BAD PRACTICE and will be fixed with
 #        https://github.com/openhwgroup/CV_CORE/pull/421 is resolved.
-CV_CORE_MANIFEST    := $(CV_CORE_PKG)/cv32e40x_manifest.flist
-export DESIGN_RTL_DIR = $(CV_CORE_PKG)/rtl
+ifdef $(CORE_SIM)
+	CV_CORE_MANIFEST    := $(CV_CORE_PKG)/vsim_brle.flist
+	export DESIGN_RTL_DIR = $(CV_CORE_PKG)/rtl
+else
+	CV_CORE_MANIFEST    := $(CV_CORE_PKG)/cv32e40x_manifest.flist
+	export DESIGN_RTL_DIR = $(CV_CORE_PKG)/rtl
+endif
+
+VSIM_TB_FILES  := $(TBSRC_CORE)/tb_top.sv \
+               $(TBSRC_CORE)/tb_riscv/riscv_rvalid_stall.sv \
+               $(TBSRC_CORE)/tb_riscv/riscv_gnt_stall.sv \
+               $(TBSRC_CORE)/mm_ram.sv \
+               $(TBSRC_CORE)/dp_ram.sv
 
 # Shorthand rules for convience
 CV_CORE_pkg: clone_$(CV_CORE_LC)_rtl
@@ -451,6 +464,26 @@ xrun-clean:
 xrun-clean-all: xrun-clean
 	rm -vrf $(addprefix $(FIRMWARE)/firmware., elf bin hex map) \
 		$(FIRMWARE_OBJS) $(FIRMWARE_TEST_OBJS) $(COMPLIANCE_TEST_OBJS)
+
+
+#############################################
+# vsim without uvm
+vsim:
+	@echo "* Compiling CORE TB and CV32E40X with VSIM"
+	vlog -work ./work -f $(CV_CORE_MANIFEST) -sv $(VSIM_TB_FILES) \
+		            +define+VERILATOR
+	vsim ./work.tb_top +firmware=./hello-world/hello-world.hex \
+							-do "run 400ns;"
+
+#############################################
+# vsim without uvm
+vsimc:
+	@echo "* Compiling CORE TB and CV32E40X with VSIM"
+	vlog -work ./work -f $(CV_CORE_MANIFEST) -sv $(VSIM_TB_FILES) \
+									+define+VERILATOR
+	vsim -c ./work.tb_top +firmware=./hello-world/hello-world.hex \
+							-do "run 400ns;"
+
 
 ###############################################################################
 # Verilator
