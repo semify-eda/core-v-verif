@@ -468,12 +468,16 @@ xrun-clean-all: xrun-clean
 
 #############################################
 # vsim without uvm
-vsim:
+vsim: #define verilator to dissable import of uvm files	
 	@echo "* Compiling CORE TB and CV32E40X with VSIM"
 	vlog -work ./work -f $(CV_CORE_MANIFEST) -sv $(VSIM_TB_FILES) \
-		            +define+VERILATOR
+		            +define+VERILATOR +define+verbose
 	vsim ./work.tb_top +firmware=./hello-world/hello-world.hex \
-							-do "run 400ns;"
+							$(vsim_defines) -do "do vsim.tcl" -do "run -all"
+
+vsim_defines := +firmware=./hello-world/hello-world.hex \
+							+verbose=1 \
+							#+verbose_read_writes=1
 
 #############################################
 # vsim without uvm
@@ -481,8 +485,8 @@ vsimc:
 	@echo "* Compiling CORE TB and CV32E40X with VSIM"
 	vlog -work ./work -f $(CV_CORE_MANIFEST) -sv $(VSIM_TB_FILES) \
 									+define+VERILATOR
-	vsim -c ./work.tb_top +firmware=./hello-world/hello-world.hex \
-							-do "run 400ns;"
+	vsim -c ./work.tb_top -do "do vsim.tcl" $(vsim_defines) \
+					-do "run -all"
 
 
 ###############################################################################

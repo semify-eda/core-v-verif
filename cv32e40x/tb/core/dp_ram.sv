@@ -53,7 +53,7 @@ module dp_ram
             end
             /* handle reads */
             else begin
-                if ($test$plusargs("verbose"))
+                if ($test$plusargs("verbose_read_writes"))
                     $display("read  addr=0x%08x: data=0x%08x", addr_b_int,
                              {mem[addr_b_int + 3], mem[addr_b_int + 2],
                               mem[addr_b_int + 1], mem[addr_b_int + 0]});

@@ -15,6 +15,7 @@
 // This maps the dp_ram module to the instruction and data ports of the RI5CY
 // processor core and some pseudo peripherals
 
+
 module mm_ram
 `ifndef VERILATOR
   import uvm_pkg::*;
@@ -688,8 +689,8 @@ module mm_ram
     // -------------------------------------------------------------
     // show writes if requested
     always_ff @(posedge clk_i, negedge rst_ni) begin: verbose_writes
-        if ($test$plusargs("verbose") && data_req_i && data_we_i)
-            $display("write addr=0x%08x: data=0x%08x",
+       if ($test$plusargs("verbose_read_writes") && data_req_i && data_we_i)
+           $display("write addr=0x%08x: data=0x%08x",
                      data_addr_i, data_wdata_i);
     end
 
