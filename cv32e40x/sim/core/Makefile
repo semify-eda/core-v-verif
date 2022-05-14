@@ -53,7 +53,7 @@ ASM = ../../../../C #set
 PATH_TO_C_FILES = ../../../../C/
 TEST_FILES = $(PATH_TO_C_FILES)/main.c #$(PATH_TO_C_FILES)/rle.c $(PATH_TO_C_FILES)/data.c
 
-CORE_SIM = VSIM # empty means verilator
+CORE_SIM = VSIM # empty means verilator/ comment out for verilator sim
 ##############################################################################
 
 
@@ -471,19 +471,18 @@ compile_src:
 	make  /hello-world/hello-world.hex
 	make bsp
 
+vsim_defines := +firmware=./hello-world/hello-world.hex \
+							+verbose=1 \
+							#+verbose_read_writes=1
+
 #############################################
 # vsim without uvm
 vsim: #define verilator to dissable import of uvm files
-	make compile_src
 	@echo "* Compiling CORE TB and CV32E40X with VSIM"
 	vlog -work ./work -f $(CV_CORE_MANIFEST) -sv $(VSIM_TB_FILES) \
 		            +define+VERILATOR +define+verbose
 	vsim ./work.tb_top +firmware=./hello-world/hello-world.hex \
-							$(vsim_defines) -do "do vsim.tcl" -do "run -all"
-
-vsim_defines := +firmware=./hello-world/hello-world.hex \
-							+verbose=1 \
-							#+verbose_read_writes=1
+							$(vsim_defines) -do "do vsim.tcl"
 
 #############################################
 # vsim without uvm
@@ -491,8 +490,7 @@ vsimc:
 	@echo "* Compiling CORE TB and CV32E40X with VSIM"
 	vlog -work ./work -f $(CV_CORE_MANIFEST) -sv $(VSIM_TB_FILES) \
 									+define+VERILATOR
-	vsim -c ./work.tb_top -do "do vsim.tcl" $(vsim_defines) \
-					-do "run -all"
+	vsim -c ./work.tb_top $(vsim_defines) -do "do vsim.tcl"
 
 
 ###############################################################################

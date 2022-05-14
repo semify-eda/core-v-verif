@@ -67,7 +67,7 @@ int main(int argc, char **argv, char **env)
         if (t > 40)
             top->rst_ni = 1;
 
-        if (t > 10000)
+        if (t > 100000)
         {
           top->rst_ni = 0;
           break; //breaking for now cuz otherwise endless sim

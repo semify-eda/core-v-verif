@@ -40,6 +40,15 @@
 #
 ###############################################################################
 
+# Added defines for tolchain paths ans prefix
+CV_SW_PREFIX := riscv32-corev-elf-
+# change this to path where TOOLCHAIN is stored
+CV_SW_TOOLCHAIN := /opt/openhw_riscv
+TEST := "hello-world"
+SIM_TEST_PROGRAM_RESULTS := ./hello-world
+SIM_BSP_RESULTS := ./test_binary
+CV_SW_MARCH := rv32imc #rv32i
+
 # "Constants"
 MAKE           = make
 MAKE_DIR       = $(PWD)
