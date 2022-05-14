@@ -14,8 +14,8 @@
 export SHELL = /bin/bash
 
 CV_CORE_REPO   ?= git@github.com:semify-eda/cv32e40x.git
-CV_CORE_BRANCH ?= brle
-CV_CORE_HASH   ?= brle
+CV_CORE_BRANCH ?= test_release_tag
+CV_CORE_HASH   ?= test_release_tag
 CV_CORE_TAG    ?= none
 
 # RISCVDV_REPO    ?= https://github.com/google/riscv-dv

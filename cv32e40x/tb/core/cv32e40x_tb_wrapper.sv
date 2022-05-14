@@ -136,15 +136,15 @@ module cv32e40x_tb_wrapper
 
          .clic_irq_i             (  1'b0                 ), // TODO
          .clic_irq_id_i          ( 12'h0                 ), // TODO
-         //.clic_irq_il_i          (  8'h0                 ), // TODO
+         .clic_irq_il_i          (  8'h0                 ), // TODO
          .clic_irq_priv_i        (  2'h0                 ), // TODO
-        // .clic_irq_hv_i          (  1'b0                 ), // TODO
-         //.clic_irq_id_o          (                       ), // TODO
-         //.clic_irq_mode_o        (                       ),
-         //.clic_irq_exit_o        (                       ),
+         .clic_irq_hv_i          (  1'b0                 ), // TODO
+         .clic_irq_id_o          (                       ), // TODO
+         .clic_irq_mode_o        (                       ),
+         .clic_irq_exit_o        (                       ),
          //new pins
-         .clic_irq_level_i (8'h0),
-         .clic_irq_shv_i (1'h0),
+         //.clic_irq_level_i (8'h0),
+         //.clic_irq_shv_i (1'h0),
 
          //these interrupt interface outputs do not exist anymore seemingly
          

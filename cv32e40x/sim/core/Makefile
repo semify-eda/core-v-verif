@@ -480,7 +480,7 @@ vsim_defines := +firmware=./hello-world/hello-world.hex \
 vsim: #define verilator to dissable import of uvm files
 	@echo "* Compiling CORE TB and CV32E40X with VSIM"
 	vlog -work ./work -f $(CV_CORE_MANIFEST) -sv $(VSIM_TB_FILES) \
-		            +define+VERILATOR +define+verbose
+		            +define+VERILATOR +define+verbose -svinputport=net
 	vsim ./work.tb_top +firmware=./hello-world/hello-world.hex \
 							$(vsim_defines) -do "do vsim.tcl"
 
