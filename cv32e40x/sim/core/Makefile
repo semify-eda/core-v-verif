@@ -48,10 +48,10 @@ CV_SW_TOOLCHAIN := /opt/openhw_riscv
 TEST := "hello-world"
 SIM_TEST_PROGRAM_RESULTS := ./hello-world
 SIM_BSP_RESULTS := ./test_binary
-CV_SW_MARCH := rv32im
+CV_SW_MARCH := rv32imc #rv32i
 ASM = ../../../../C #set
 PATH_TO_C_FILES = ../../../../C/
-TEST_FILES = $(PATH_TO_C_FILES)/main.c $(PATH_TO_C_FILES)/rle.c $(PATH_TO_C_FILES)/data.c
+TEST_FILES = $(PATH_TO_C_FILES)/main.c #$(PATH_TO_C_FILES)/rle.c $(PATH_TO_C_FILES)/data.c
 
 CORE_SIM = VSIM # empty means verilator
 ##############################################################################
@@ -466,9 +466,15 @@ xrun-clean-all: xrun-clean
 		$(FIRMWARE_OBJS) $(FIRMWARE_TEST_OBJS) $(COMPLIANCE_TEST_OBJS)
 
 
+compile_src:
+	make /hello-world/hello-world.elf
+	make  /hello-world/hello-world.hex
+	make bsp
+
 #############################################
 # vsim without uvm
-vsim: #define verilator to dissable import of uvm files	
+vsim: #define verilator to dissable import of uvm files
+	make compile_src
 	@echo "* Compiling CORE TB and CV32E40X with VSIM"
 	vlog -work ./work -f $(CV_CORE_MANIFEST) -sv $(VSIM_TB_FILES) \
 		            +define+VERILATOR +define+verbose
