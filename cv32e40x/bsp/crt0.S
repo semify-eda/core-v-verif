@@ -41,7 +41,7 @@ _start:
 	sub a2, a2, a0
 	li a1, 0
 	call memset
-
+ 
 /* new-style constructors and destructors */
 	la a0, __libc_fini_array
 	call atexit

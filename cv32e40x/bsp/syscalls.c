@@ -31,7 +31,7 @@
 extern int errno;
 
 /* write to this reg for outputting strings */
-#define STDOUT_REG CV_VP_VIRTUAL_PRINTER_BASE
+#define STDOUT_REG (0x10000000)
 /* write test result of program to this reg */
 #define RESULT_REG (CV_VP_STATUS_FLAGS_BASE)
 /* write exit value of program to this reg */
@@ -254,9 +254,10 @@ ssize_t _write(int file, const void *ptr, size_t len)
       return -1;
     }
 
+  volatile int* data_ptr = STDOUT_REG;
   const void *eptr = cptr + len;
   while (cptr != eptr)
-    *(volatile int *)STDOUT_REG = *cptr++;
+    *data_ptr = *cptr++;
   return len;
 }
 

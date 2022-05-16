@@ -49,6 +49,39 @@ SIM_TEST_PROGRAM_RESULTS := ./hello-world
 SIM_BSP_RESULTS := ./test_binary
 CV_SW_MARCH := rv32imc #rv32i
 
+CORE_SIM = VSIM # empty means verilator/ comment out for verilator sim
+
+vsim_defines := +firmware=./hello-world/hello-world.hex \
+							+verbose=1 \
+							#+verbose_read_writes=1
+
+
+compile_src:
+	make /hello-world/hello-world.elf
+	make  /hello-world/hello-world.hex
+
+#############################################
+# vsim without uvm
+vsim: #define verilator to dissable import of uvm files
+	@echo "* Compiling CORE TB and CV32E40X with VSIM"
+	vlog -work ./work -f $(CV_CORE_MANIFEST) -sv $(VSIM_TB_FILES) \
+		            +define+VERILATOR +define+verbose -svinputport=net
+	vsim ./work.tb_top +firmware=./hello-world/hello-world.hex \
+							$(vsim_defines) -do "do vsim.tcl"
+
+#############################################
+# vsim without uvm
+vsimc:
+	@echo "* Compiling CORE TB and CV32E40X with VSIM"
+	vlog -work ./work -f $(CV_CORE_MANIFEST) -sv $(VSIM_TB_FILES) \
+		            +define+VERILATOR +define+verbose -svinputport=net
+	vsim -c ./work.cv32e40p_wrapper +firmware=./hello-world/hello-world.hex \
+				$(vsim_defines)
+
+
+
+#####################################################
+
 # "Constants"
 MAKE           = make
 MAKE_DIR       = $(PWD)
@@ -56,7 +89,7 @@ MAKE_PATH     := $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 COREV_PROJ     = cv32
 CORE_V_VERIF   = $(abspath $(MAKE_PATH)/../../..)
 DATE           = $(shell date +%F)
-WAVES          = 0
+WAVES          = 1
 
 CV_CORE       ?= CV32E40P
 CV_CORE_LC     = $(shell echo $(CV_CORE) | tr A-Z a-z)

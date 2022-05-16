@@ -514,13 +514,13 @@ module mm_ram
     always_ff @(posedge clk_i, negedge rst_ni) begin: print_peripheral
         if(print_valid) begin
             if ($test$plusargs("verbose")) begin
-                if (32 <= print_wdata && print_wdata < 128)
-                    $display("OUT: '%c'", print_wdata[7:0]);
-                else
-                    $display("OUT: %3d", print_wdata);
+                if (32 <= print_wdata && print_wdata < 128) begin
+                    $write("%s", print_wdata[7:0]);
+                end else
+                    $write("%s", print_wdata);
 
             end else begin
-                $write("%c", print_wdata[7:0]);
+                $write("%s", print_wdata[7:0]);
 `ifndef VERILATOR
                 $fflush();
 `endif

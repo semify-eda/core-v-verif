@@ -15,4 +15,4 @@ add wave -group "prefetcher" /tb_top/cv32e40x_tb_wrapper_i/cv32e40x_core_i/if_st
 add wave -group "alignment buf" /tb_top/cv32e40x_tb_wrapper_i/cv32e40x_core_i/if_stage_i/prefetch_unit_i/alignment_buffer_i/*
 add wave -group "id stage" /tb_top/cv32e40x_tb_wrapper_i/cv32e40x_core_i/id_stage_i/*
 add wave -group "reg_file" /tb_top/cv32e40x_tb_wrapper_i/cv32e40x_core_i/register_file_wrapper_i/register_file_i/*
-run -a
+run 1800ns

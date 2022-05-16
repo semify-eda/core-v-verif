@@ -54,6 +54,34 @@ PATH_TO_C_FILES = ../../../../C/
 TEST_FILES = $(PATH_TO_C_FILES)/main.c #$(PATH_TO_C_FILES)/rle.c $(PATH_TO_C_FILES)/data.c
 
 CORE_SIM = VSIM # empty means verilator/ comment out for verilator sim
+
+vsim_defines := +firmware=./hello-world/hello-world.hex \
+							+verbose=1 \
+							#+verbose_read_writes=1
+
+
+compile_src:
+	make /hello-world/hello-world.elf
+	make  /hello-world/hello-world.hex
+
+#############################################
+# vsim without uvm
+vsim: #define verilator to dissable import of uvm files
+	@echo "* Compiling CORE TB and CV32E40X with VSIM"
+	vlog -work ./work -f $(CV_CORE_MANIFEST) -sv $(VSIM_TB_FILES) \
+		            +define+VERILATOR +define+verbose -svinputport=net
+	vsim ./work.tb_top +firmware=./hello-world/hello-world.hex \
+							$(vsim_defines) -do "do vsim.tcl"
+
+#############################################
+# vsim without uvm
+vsimc:
+	@echo "* Compiling CORE TB and CV32E40X with VSIM"
+	vlog -work ./work -f $(CV_CORE_MANIFEST) -sv $(VSIM_TB_FILES) \
+									+define+VERILATOR +define+verbose -svinputport=net
+	vsim -c ./work.tb_top +firmware=./hello-world/hello-world.hex \
+					$(vsim_defines) -do "do vsim.tcl"
+
 ##############################################################################
 
 
@@ -464,33 +492,6 @@ xrun-clean:
 xrun-clean-all: xrun-clean
 	rm -vrf $(addprefix $(FIRMWARE)/firmware., elf bin hex map) \
 		$(FIRMWARE_OBJS) $(FIRMWARE_TEST_OBJS) $(COMPLIANCE_TEST_OBJS)
-
-
-compile_src:
-	make /hello-world/hello-world.elf
-	make  /hello-world/hello-world.hex
-	make bsp
-
-vsim_defines := +firmware=./hello-world/hello-world.hex \
-							+verbose=1 \
-							#+verbose_read_writes=1
-
-#############################################
-# vsim without uvm
-vsim: #define verilator to dissable import of uvm files
-	@echo "* Compiling CORE TB and CV32E40X with VSIM"
-	vlog -work ./work -f $(CV_CORE_MANIFEST) -sv $(VSIM_TB_FILES) \
-		            +define+VERILATOR +define+verbose
-	vsim ./work.tb_top +firmware=./hello-world/hello-world.hex \
-							$(vsim_defines) -do "do vsim.tcl"
-
-#############################################
-# vsim without uvm
-vsimc:
-	@echo "* Compiling CORE TB and CV32E40X with VSIM"
-	vlog -work ./work -f $(CV_CORE_MANIFEST) -sv $(VSIM_TB_FILES) \
-									+define+VERILATOR
-	vsim -c ./work.tb_top $(vsim_defines) -do "do vsim.tcl"
 
 
 ###############################################################################

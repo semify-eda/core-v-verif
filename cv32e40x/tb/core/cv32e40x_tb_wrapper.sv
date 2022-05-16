@@ -22,7 +22,7 @@ module cv32e40x_tb_wrapper
                 BOOT_ADDR         = 'h80,
                 DM_HALTADDRESS    = 32'h1A11_0800,
                 HART_ID           = 32'h0000_0000,
-                IMP_ID            = 32'h0000_0000,
+                IMP_ID            = 4'b0000,
                 // Parameters used by DUT
                 NUM_MHPMCOUNTERS  = 1
     )
@@ -119,6 +119,8 @@ module cv32e40x_tb_wrapper
          .data_err_i             ( 1'b0                  ),
          .data_atop_o            (                       ),
          .data_exokay_i          ( 1'b1                  ),
+         .data_wdata_o           ( data_wdata            ),
+         .data_rdata_i           ( data_rdata            ),
 
          // Cycle Count
          .mcycle_o               (                       ), // TODO
@@ -135,7 +137,7 @@ module cv32e40x_tb_wrapper
          .irq_i                  ( {32{1'b0}}            ),
 
          .clic_irq_i             (  1'b0                 ), // TODO
-         .clic_irq_id_i          ( 12'h0                 ), // TODO
+         .clic_irq_id_i          ( 5'h0                 ), // TODO
          //.clic_irq_il_i          (  8'h0                 ), // TODO
          .clic_irq_priv_i        (  2'h0                 ), // TODO
         // .clic_irq_hv_i          (  1'b0                 ), // TODO
