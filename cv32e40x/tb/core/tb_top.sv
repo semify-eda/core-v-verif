@@ -75,7 +75,7 @@ module tb_top
             $display("No firmware specified");
             $finish;
         end
-    end
+    end // block: load_prog
 
     initial begin: clock_gen
         forever begin
@@ -84,11 +84,20 @@ module tb_top
         end
     end: clock_gen
 
-
+  integer pc_file;
     // timing format, reset generation and parameter check
     initial begin
         $timeformat(-9, 0, "ns", 9);
         core_rst_n = 1'b0;
+
+       // dump program counter to analyze
+       //$dumpfile("pc.vcd");
+       //$dumpvars(1, tb_top.cv32e40x_tb_wrapper_i.cv32e40x_core_i.if_stage_i.pc_if_o);
+
+       //monitor programm counter
+       pc_file = $fopen("pc.out");
+       $fmonitor(pc_file, "0x%h", tb_top.cv32e40x_tb_wrapper_i.cv32e40x_core_i.if_stage_i.pc_if_o);
+       
 
         // wait a few cycles
         repeat (RESET_WAIT_CYCLES) begin

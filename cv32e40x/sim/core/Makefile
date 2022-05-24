@@ -51,7 +51,7 @@ SIM_BSP_RESULTS := ./test_binary
 CV_SW_MARCH := rv32imc #rv32i
 ASM = ../../../../C #set
 PATH_TO_C_FILES = ../../../../C/
-TEST_FILES = $(PATH_TO_C_FILES)/main.c #$(PATH_TO_C_FILES)/rle.c $(PATH_TO_C_FILES)/data.c
+TEST_FILES = $(PATH_TO_C_FILES)/main.c $(PATH_TO_C_FILES)/rle.c $(PATH_TO_C_FILES)/data.c
 
 CORE_SIM = VSIM # empty means verilator/ comment out for verilator sim
 
@@ -60,13 +60,14 @@ vsim_defines := +firmware=./hello-world/hello-world.hex \
 							#+verbose_read_writes=1
 
 
-compile_src:
+compile:
 	make /hello-world/hello-world.elf
 	make  /hello-world/hello-world.hex
 
 #############################################
 # vsim without uvm
 vsim: #define verilator to dissable import of uvm files
+	rm -f pc.out #delete pc counter monitored form last sim
 	@echo "* Compiling CORE TB and CV32E40X with VSIM"
 	vlog -work ./work -f $(CV_CORE_MANIFEST) -sv $(VSIM_TB_FILES) \
 		            +define+VERILATOR +define+verbose -svinputport=net
@@ -76,11 +77,18 @@ vsim: #define verilator to dissable import of uvm files
 #############################################
 # vsim without uvm
 vsimc:
+	rm -f pc.out #delete pc counter monitored form last sim
 	@echo "* Compiling CORE TB and CV32E40X with VSIM"
 	vlog -work ./work -f $(CV_CORE_MANIFEST) -sv $(VSIM_TB_FILES) \
 									+define+VERILATOR +define+verbose -svinputport=net
 	vsim -c ./work.tb_top +firmware=./hello-world/hello-world.hex \
 					$(vsim_defines) -do "do vsim.tcl"
+
+# make a histogramm of porgramm counter values
+histo:
+	make compile
+	make vsimc
+	python ../../../../py/histogram.py
 
 ##############################################################################
 
