@@ -68,17 +68,14 @@ module cv32e40x_tb_wrapper
    // eXtension Interface
     if_xif #(
         .X_NUM_RS    ( 2  ),
-        .X_MEM_WIDTH ( 32 ),
-        .X_RFR_WIDTH ( 32 ),
-        .X_RFW_WIDTH ( 32 ),
-        .X_MISA      ( 32'b01000000100000000000000000000000)
+        .X_MISA      (32'h0 ) // 32'b01000000100000000000000000000000)
              ) xif();
 
 
     // instantiate the core
     cv32e40x_core #(
                  .NUM_MHPMCOUNTERS (NUM_MHPMCOUNTERS),
-                    .X_EXT (1'b1)
+                    .X_EXT (1'b1) //enable hardware for xtension interface
                 )
     cv32e40x_core_i
         (
@@ -127,12 +124,12 @@ module cv32e40x_tb_wrapper
          .mcycle_o               (                       ), // TODO
 
          // eXtension interface
-         .xif_compressed_if      ( xif.cpu_compressed             ),
-         .xif_issue_if           ( xif.cpu_issue                  ),
-         .xif_commit_if          ( xif.cpu_commit                 ),
-         .xif_mem_if             ( xif.cpu_mem                    ),
-         .xif_mem_result_if      ( xif.cpu_mem_result             ),
-         .xif_result_if          ( xif.cpu_result                 ),
+         .xif_compressed_if      ( xif           ),
+         .xif_issue_if           ( xif                 ),
+         .xif_commit_if          ( xif                 ),
+         .xif_mem_if             ( xif                   ),
+         .xif_mem_result_if      ( xif            ),
+         .xif_result_if          ( xif                ),
 
          // Interrupts
          .irq_i                  ( {32{1'b0}}            ),
@@ -206,7 +203,12 @@ module cv32e40x_tb_wrapper
 
     read_sig_instr read_sig_instr_i ( .clk_i (clk_i),
                                       .rst_ni (rst_ni),
-                                      .xif_issue (xif) );
+                                      .xif_compressed (xif),
+                                      .xif_issue (xif),
+                                      .xif_commit (xif),
+                                      .xif_mem (xif),
+                                      .xif_mem_result (xif),
+                                      .xif_result (xif));
    
                                       
 
