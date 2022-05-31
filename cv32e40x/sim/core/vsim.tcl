@@ -20,4 +20,5 @@ add wave -group "ext_if_in_id_stage" /tb_top/cv32e40x_tb_wrapper_i/cv32e40x_core
 add wave -group "compressed decoder" /tb_top/cv32e40x_tb_wrapper_i/cv32e40x_core_i/if_stage_i/compressed_decoder_i/*
 add wave -group "ex_stage" /tb_top/cv32e40x_tb_wrapper_i/cv32e40x_core_i/ex_stage_i/*
 add wave -group "own instr" /tb_top/cv32e40x_tb_wrapper_i/read_sig_instr_i/*
-run 69450ns
+add wave -group "register file" /tb_top/cv32e40x_tb_wrapper_i/cv32e40x_core_i/register_file_wrapper_i/register_file_i/*
+run 69490ns

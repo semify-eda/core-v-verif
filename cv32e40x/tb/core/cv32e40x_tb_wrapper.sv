@@ -67,15 +67,16 @@ module cv32e40x_tb_wrapper
 
    // eXtension Interface
     if_xif #(
-        .X_NUM_RS    ( 2  ),
-        .X_MISA      (32'h0 ) // 32'b01000000100000000000000000000000)
+             .X_NUM_RS    ( 3  ),
+             .X_MISA      (32'h0 ) // 32'b01000000100000000000000000000000)
              ) xif();
 
 
     // instantiate the core
     cv32e40x_core #(
                  .NUM_MHPMCOUNTERS (NUM_MHPMCOUNTERS),
-                    .X_EXT (1'b1) //enable hardware for xtension interface
+                    .X_EXT (1'b1), //enable hardware for xtension interface
+                    .X_NUM_RS (3)  // we need three read ports form memory, to read 3 sorce regs at the same time
                 )
     cv32e40x_core_i
         (
