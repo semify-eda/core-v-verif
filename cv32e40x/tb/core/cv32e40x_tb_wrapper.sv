@@ -75,6 +75,7 @@ module cv32e40x_tb_wrapper
     // instantiate the core
     cv32e40x_core #(
                  .NUM_MHPMCOUNTERS (NUM_MHPMCOUNTERS),
+                    .B_EXT (1),
                     .X_EXT (1'b1), //enable hardware for xtension interface
                     .X_NUM_RS (3)  // we need three read ports form memory, to read 3 sorce regs at the same time
                 )
@@ -202,7 +203,7 @@ module cv32e40x_tb_wrapper
          .exit_valid_o   ( exit_valid_o                              ),
          .exit_value_o   ( exit_value_o                              ));
 
-    read_sig_instr read_sig_instr_i ( .clk_i (clk_i),
+    coproc coproc_i ( .clk_i (clk_i),
                                       .rst_ni (rst_ni),
                                       .xif_compressed (xif),
                                       .xif_issue (xif),

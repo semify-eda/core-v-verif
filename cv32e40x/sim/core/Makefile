@@ -42,13 +42,22 @@
 
 ##############################################################################
 # Added defines for tolchain paths ans prefix
-CV_SW_PREFIX := riscv32-corev-elf-
+OWN_COMPILER := 1
+
+ifdef OWN_COMPILER
+	CV_SW_PREFIX := riscv32-unknown-elf-
 # change this to path where TOOLCHAIN is stored
-CV_SW_TOOLCHAIN := /opt/openhw_riscv
+	CV_SW_TOOLCHAIN := /opt/risc32_self_compile
+else
+	CV_SW_PREFIX := riscv32-corev-elf-
+# change this to path where TOOLCHAIN is stored
+	CV_SW_TOOLCHAIN := /opt/openhw_riscv
+endif
+
 TEST := "hello-world"
 SIM_TEST_PROGRAM_RESULTS := ./hello-world
-SIM_BSP_RESULTS := ./test_binary
-CV_SW_MARCH := rv32imc #rv32i
+SIM_BSP_RESULTS := ./test_binaryf
+CV_SW_MARCH := rv32imc_zbs #rv32i
 ASM = ../../../../C #set
 PATH_TO_C_FILES = ../../../../C/
 TEST_FILES = $(PATH_TO_C_FILES)/main.c $(PATH_TO_C_FILES)/rle.c $(PATH_TO_C_FILES)/data.c
@@ -61,7 +70,7 @@ vsim_defines := +firmware=./hello-world/hello-world.hex \
 
 
 compile:
-	make /hello-world/hello-world.elf
+	#make /hello-world/hello-world.elf
 	make  /hello-world/hello-world.hex
 
 #############################################
@@ -88,6 +97,9 @@ vsimc:
 histo:
 	make compile
 	make vsimc
+	python ../../../../py/histogram.py
+
+histo_only:
 	python ../../../../py/histogram.py
 
 ##############################################################################

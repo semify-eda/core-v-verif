@@ -1,5 +1,4 @@
-
-
+radix hex
 
 add wave -group "insrtcn" tb_top.core_clk
 add wave -group "insrtcn" tb_top.cv32e40x_tb_wrapper_i.instr_rdata
@@ -19,6 +18,10 @@ add wave -group "xif in wrapper" /tb_top/cv32e40x_tb_wrapper_i/xif/*
 add wave -group "ext_if_in_id_stage" /tb_top/cv32e40x_tb_wrapper_i/cv32e40x_core_i/id_stage_i/xif_issue_if/*
 add wave -group "compressed decoder" /tb_top/cv32e40x_tb_wrapper_i/cv32e40x_core_i/if_stage_i/compressed_decoder_i/*
 add wave -group "ex_stage" /tb_top/cv32e40x_tb_wrapper_i/cv32e40x_core_i/ex_stage_i/*
-add wave -group "own instr" /tb_top/cv32e40x_tb_wrapper_i/read_sig_instr_i/*
+add wave -group "copopoc fsm" /tb_top/cv32e40x_tb_wrapper_i/coproc_i/*
 add wave -group "register file" /tb_top/cv32e40x_tb_wrapper_i/cv32e40x_core_i/register_file_wrapper_i/register_file_i/*
-run 69490ns
+add wave -group "custom ex stage" /tb_top/cv32e40x_tb_wrapper_i/coproc_i/custom_ex_stage_i/*
+add wave -group "and logic cntb" tb_top/cv32e40x_tb_wrapper_i/coproc_i/custom_ex_stage_i/genblk1[2]/cb/*
+add wave -group "and logic cntb check for 8" tb_top/cv32e40x_tb_wrapper_i/coproc_i/custom_ex_stage_i/genblk1[0]/cb/*
+run -a
+#5620ns
