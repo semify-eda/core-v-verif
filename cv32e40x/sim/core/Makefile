@@ -41,6 +41,7 @@
 ###############################################################################
 
 ##############################################################################
+
 # Added defines for tolchain paths ans prefix
 OWN_COMPILER := 1
 
@@ -78,10 +79,11 @@ compile:
 vsim: #define verilator to dissable import of uvm files
 	rm -f pc.out #delete pc counter monitored form last sim
 	@echo "* Compiling CORE TB and CV32E40X with VSIM"
-	vlog -work ./work -f $(CV_CORE_MANIFEST) -sv $(VSIM_TB_FILES) \
+	vlog +acc -work ./work -f $(CV_CORE_MANIFEST) -sv $(VSIM_TB_FILES) \
 		            +define+VERILATOR +define+verbose -svinputport=net
 	vsim ./work.tb_top +firmware=./hello-world/hello-world.hex \
-							$(vsim_defines) -do "do vsim.tcl"
+							$(vsim_defines) -do "do vsim.tcl" \
+              -do "run -a"
 
 #############################################
 # vsim without uvm

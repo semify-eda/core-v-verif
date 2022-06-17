@@ -15,7 +15,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0 WITH SHL-0.51
 
-module cv32e40x_tb_wrapper
+module cv32e40x_tb_wrapper import cv32e40x_pkg::*;   
     #(parameter // Parameters used by TB
                 INSTR_RDATA_WIDTH = 32,
                 RAM_ADDR_WIDTH    = 20,
@@ -60,6 +60,10 @@ module cv32e40x_tb_wrapper
     logic                         irq_ack;
     logic [0:4]                   irq_id_out;
     logic                         irq_sec;
+
+   logic [SAMPLES_WIDTH - 1: 0]   samples_csr_i;
+   logic [SIGNALS_WIDTH - 1: 0]   signals_csr_i;
+   
 
 
     // interrupts (only timer for now)
@@ -161,7 +165,11 @@ module cv32e40x_tb_wrapper
 
          // CPU Control Signals
          .fetch_enable_i         ( fetch_enable_i        ),
-         .core_sleep_o           ( core_sleep_o          )
+         .core_sleep_o           ( core_sleep_o          ),
+
+         //custom csr
+         .samples_csr_o (samples_csr_i),
+         .signals_csr_o (signals_csr_i)
        );
 
     // this handles read to RAM and memory mapped pseudo peripherals
@@ -204,13 +212,15 @@ module cv32e40x_tb_wrapper
          .exit_value_o   ( exit_value_o                              ));
 
     coproc coproc_i ( .clk_i (clk_i),
-                                      .rst_ni (rst_ni),
-                                      .xif_compressed (xif),
-                                      .xif_issue (xif),
-                                      .xif_commit (xif),
-                                      .xif_mem (xif),
-                                      .xif_mem_result (xif),
-                                      .xif_result (xif));
+                      .rst_ni (rst_ni),
+                      .xif_compressed (xif),
+                      .xif_issue (xif),
+                      .xif_commit (xif),
+                      .xif_mem (xif),
+                      .xif_mem_result (xif),
+                      .xif_result (xif),
+                      .signals_csr_i (signals_csr_i),
+                      .samples_csr_i (samples_csr_i));
    
                                       
 

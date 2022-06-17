@@ -313,7 +313,7 @@ RISCV_MARCH      = $(CV_SW_MARCH)
 RISCV_CC         = $(CV_SW_CC)
 RISCV_CFLAGS     = $(CV_SW_CFLAGS)
 
-CFLAGS ?= -Os -g -static -mabi=ilp32 -march=$(RISCV_MARCH) -Wall $(RISCV_CFLAGS)
+CFLAGS ?= -fdata-sections -ffunction-sections -Os -g -static -mabi=ilp32 -march=$(RISCV_MARCH) -Wall $(RISCV_CFLAGS)
 
 $(warning RISCV set to $(RISCV))
 $(warning RISCV_PREFIX set to $(RISCV_PREFIX))
@@ -495,6 +495,7 @@ else
 		-I $(BSP) \
 		-o .$@ \
 		-nostartfiles \
+    -Wl,--gc-sections \
 		$(TEST_FILES) \
 		-T $(LD_FILE) \
 		$(LD_LIBRARY) \
