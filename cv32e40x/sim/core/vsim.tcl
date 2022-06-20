@@ -26,5 +26,7 @@ add wave -group "cntb fsm" /tb_top/cv32e40x_tb_wrapper_i/coproc_i/cntb_i/*
 add wave -group "and logic cntb" tb_top/cv32e40x_tb_wrapper_i/coproc_i/cntb_i/genblk1[2]/cb/*
 add wave -group "and logic cntb check for 8" tb_top/cv32e40x_tb_wrapper_i/coproc_i/cntb_i/genblk1[0]/cb/*
 add wave -group "wbits" sim:/tb_top/cv32e40x_tb_wrapper_i/coproc_i/wbits_i/*
+add wave -group "read mem" sim:/tb_top/cv32e40x_tb_wrapper_i/coproc_i/read_mem_i/*
+add wave -group "rmem interface" sim:/tb_top/cv32e40x_tb_wrapper_i/coproc_i/if_rmem_i/*
 run -a
 #5620ns
