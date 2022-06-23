@@ -43,9 +43,9 @@ _start:
 	call memset
  
 /* new-style constructors and destructors */
-	la a0, __libc_fini_array
-	call atexit
-	call __libc_init_array
+	//la a0, __libc_fini_array
+	//call atexit
+//	call __libc_init_array
 
 /* call main */
 //	lw a0, 0(sp)                    /* a0 = argc */
@@ -58,7 +58,7 @@ _start:
 	li a2, 0
 
 	call main
-	tail exit
+//	tail exit
 
 .size  _start, .-_start
 

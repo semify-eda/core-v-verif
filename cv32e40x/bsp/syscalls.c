@@ -16,6 +16,7 @@
  * OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
  * PERFORMANCE OF THIS SOFTWARE.
  */
+#include <stddef.h>
 
 #include <sys/stat.h>
 #include <sys/timeb.h>
@@ -51,7 +52,20 @@ extern int errno;
 #define _fstat fstat
 #define _isatty isatty
 #endif
+
+
+
+void *
+memset (void *dest, int val, size_t len)
+{
+  unsigned char *ptr = dest;
+  while (len-- > 0)
+    *ptr++ = val;
+  return dest;
+}
+
 /* Upstream newlib now defines this in libgloss/riscv/internal_syscall.h.  */
+/*
 long
 __syscall_error(long a0)
 {
@@ -111,7 +125,7 @@ void _exit(int exit_status)
 {
   *(volatile int *)EXIT_REG = exit_status;
   __asm__ volatile("wfi");
-  /* _exit should not return */
+  //_exit should not return 
   while (1) {};
 }
 
@@ -291,7 +305,7 @@ void *_sbrk(ptrdiff_t incr)
       return (void *) -1;
     }
 }
-
+*/
 void handle_syscall (long a0,
 		     long a1,
 		     long a2,
@@ -305,7 +319,7 @@ void handle_syscall (long a0,
   #else
     long syscall_id = a7;
   #endif
-
+/*
   switch (syscall_id) {
     case SYS_exit:
       _exit (a0);
@@ -377,4 +391,7 @@ void handle_syscall (long a0,
       unimplemented_syscall ();
       break;
   }
+*/
 }
+
+

@@ -74,8 +74,6 @@ add wave -noupdate -group wrapper /tb_top/cv32e40x_tb_wrapper_i/irq_id_in
 add wave -noupdate -group wrapper /tb_top/cv32e40x_tb_wrapper_i/irq_ack
 add wave -noupdate -group wrapper /tb_top/cv32e40x_tb_wrapper_i/irq_id_out
 add wave -noupdate -group wrapper /tb_top/cv32e40x_tb_wrapper_i/irq_sec
-add wave -noupdate -group wrapper /tb_top/cv32e40x_tb_wrapper_i/samples_csr_i
-add wave -noupdate -group wrapper /tb_top/cv32e40x_tb_wrapper_i/signals_csr_i
 add wave -noupdate -group wrapper /tb_top/cv32e40x_tb_wrapper_i/core_sleep_o
 add wave -noupdate -group ram /tb_top/cv32e40x_tb_wrapper_i/ram_i/clk_i
 add wave -noupdate -group ram /tb_top/cv32e40x_tb_wrapper_i/ram_i/rst_ni
@@ -223,8 +221,6 @@ add wave -noupdate -group core /tb_top/cv32e40x_tb_wrapper_i/cv32e40x_core_i/deb
 add wave -noupdate -group core /tb_top/cv32e40x_tb_wrapper_i/cv32e40x_core_i/debug_halted_o
 add wave -noupdate -group core /tb_top/cv32e40x_tb_wrapper_i/cv32e40x_core_i/fetch_enable_i
 add wave -noupdate -group core /tb_top/cv32e40x_tb_wrapper_i/cv32e40x_core_i/core_sleep_o
-add wave -noupdate -group core /tb_top/cv32e40x_tb_wrapper_i/cv32e40x_core_i/signals_csr_o
-add wave -noupdate -group core /tb_top/cv32e40x_tb_wrapper_i/cv32e40x_core_i/samples_csr_o
 add wave -noupdate -group core /tb_top/cv32e40x_tb_wrapper_i/cv32e40x_core_i/pc_if
 add wave -noupdate -group core /tb_top/cv32e40x_tb_wrapper_i/cv32e40x_core_i/ptr_in_if
 add wave -noupdate -group core /tb_top/cv32e40x_tb_wrapper_i/cv32e40x_core_i/jump_target_id
@@ -611,113 +607,76 @@ add wave -noupdate -group {register file} /tb_top/cv32e40x_tb_wrapper_i/cv32e40x
 add wave -noupdate -group {register file} /tb_top/cv32e40x_tb_wrapper_i/cv32e40x_core_i/register_file_wrapper_i/register_file_i/waddr_i
 add wave -noupdate -group {register file} /tb_top/cv32e40x_tb_wrapper_i/cv32e40x_core_i/register_file_wrapper_i/register_file_i/wdata_i
 add wave -noupdate -group {register file} /tb_top/cv32e40x_tb_wrapper_i/cv32e40x_core_i/register_file_wrapper_i/register_file_i/we_i
-add wave -noupdate -divider extension
-add wave -noupdate -group {xif in wrapper} /tb_top/cv32e40x_tb_wrapper_i/xif/compressed_valid
-add wave -noupdate -group {xif in wrapper} /tb_top/cv32e40x_tb_wrapper_i/xif/compressed_ready
-add wave -noupdate -group {xif in wrapper} /tb_top/cv32e40x_tb_wrapper_i/xif/compressed_req
-add wave -noupdate -group {xif in wrapper} /tb_top/cv32e40x_tb_wrapper_i/xif/compressed_resp
-add wave -noupdate -group {xif in wrapper} -color Magenta /tb_top/cv32e40x_tb_wrapper_i/xif/issue_valid
-add wave -noupdate -group {xif in wrapper} /tb_top/cv32e40x_tb_wrapper_i/xif/issue_ready
-add wave -noupdate -group {xif in wrapper} /tb_top/cv32e40x_tb_wrapper_i/xif/issue_req
-add wave -noupdate -group {xif in wrapper} /tb_top/cv32e40x_tb_wrapper_i/xif/issue_resp
-add wave -noupdate -group {xif in wrapper} /tb_top/cv32e40x_tb_wrapper_i/xif/commit_valid
-add wave -noupdate -group {xif in wrapper} /tb_top/cv32e40x_tb_wrapper_i/xif/commit
-add wave -noupdate -group {xif in wrapper} /tb_top/cv32e40x_tb_wrapper_i/xif/mem_valid
-add wave -noupdate -group {xif in wrapper} /tb_top/cv32e40x_tb_wrapper_i/xif/mem_ready
-add wave -noupdate -group {xif in wrapper} /tb_top/cv32e40x_tb_wrapper_i/xif/mem_req
-add wave -noupdate -group {xif in wrapper} /tb_top/cv32e40x_tb_wrapper_i/xif/mem_resp
-add wave -noupdate -group {xif in wrapper} /tb_top/cv32e40x_tb_wrapper_i/xif/mem_result_valid
-add wave -noupdate -group {xif in wrapper} /tb_top/cv32e40x_tb_wrapper_i/xif/mem_result
-add wave -noupdate -group {xif in wrapper} -color Orange /tb_top/cv32e40x_tb_wrapper_i/xif/result_valid
-add wave -noupdate -group {xif in wrapper} /tb_top/cv32e40x_tb_wrapper_i/xif/result_ready
-add wave -noupdate -group {xif in wrapper} -color {Cornflower Blue} /tb_top/cv32e40x_tb_wrapper_i/xif/result
-add wave -noupdate -group {copopoc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/clk_i
-add wave -noupdate -group {copopoc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/rst_ni
-add wave -noupdate -group {copopoc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/signals_csr_i
-add wave -noupdate -group {copopoc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/samples_csr_i
-add wave -noupdate -group {copopoc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/state_SN
-add wave -noupdate -group {copopoc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/state_SP
-add wave -noupdate -group {copopoc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/rd_cntb_i
-add wave -noupdate -group {copopoc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/rd_wbits_i
-add wave -noupdate -group {copopoc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/ld_op_SN
-add wave -noupdate -group {copopoc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/ld_op_SP
-add wave -noupdate -group {copopoc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/rs0_DP
-add wave -noupdate -group {copopoc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/rs0_DN
-add wave -noupdate -group {copopoc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/rs1_DP
-add wave -noupdate -group {copopoc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/rs1_DN
-add wave -noupdate -group {copopoc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/issue_ready_SP
-add wave -noupdate -group {copopoc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/issue_ready_SN
-add wave -noupdate -group {copopoc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/rd_DP
-add wave -noupdate -group {copopoc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/rd_DN
-add wave -noupdate -group {copopoc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/rd_addr_DP
-add wave -noupdate -group {copopoc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/rd_addr_DN
-add wave -noupdate -group {copopoc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/writeback_SP
-add wave -noupdate -group {copopoc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/writeback_SN
-add wave -noupdate -group {copopoc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/accept_SP
-add wave -noupdate -group {copopoc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/accept_SN
-add wave -noupdate -group {copopoc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/cntb_done_i
-add wave -noupdate -group {copopoc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/wbits_done_i
-add wave -noupdate -group {copopoc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/cntb_start_o
-add wave -noupdate -group {copopoc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/wbits_start_o
-add wave -noupdate -group {copopoc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/instr_id_DP
-add wave -noupdate -group {copopoc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/instr_id_DN
-add wave -noupdate -group {copopoc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/inc_addr_i
+add wave -noupdate -divider own_hardware
+add wave -noupdate -group {coproc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/clk_i
+add wave -noupdate -group {coproc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/rst_ni
+add wave -noupdate -group {coproc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/state_SN
+add wave -noupdate -group {coproc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/state_SP
+add wave -noupdate -group {coproc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/rd_i
+add wave -noupdate -group {coproc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/rd_addr_i
+add wave -noupdate -group {coproc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/mem_needed_i
+add wave -noupdate -group {coproc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/ld_op_SN
+add wave -noupdate -group {coproc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/ld_op_SP
+add wave -noupdate -group {coproc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/cntb_start_SP
+add wave -noupdate -group {coproc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/cntb_start_SN
+add wave -noupdate -group {coproc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/wbits_start_SP
+add wave -noupdate -group {coproc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/wbits_start_SN
+add wave -noupdate -group {coproc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/rs0_DP
+add wave -noupdate -group {coproc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/rs0_DN
+add wave -noupdate -group {coproc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/rs1_DP
+add wave -noupdate -group {coproc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/rs1_DN
+add wave -noupdate -group {coproc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/issue_ready_SP
+add wave -noupdate -group {coproc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/issue_ready_SN
+add wave -noupdate -group {coproc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/rd_DP
+add wave -noupdate -group {coproc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/rd_DN
+add wave -noupdate -group {coproc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/rd_addr_DP
+add wave -noupdate -group {coproc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/rd_addr_DN
+add wave -noupdate -group {coproc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/writeback_SP
+add wave -noupdate -group {coproc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/writeback_SN
+add wave -noupdate -group {coproc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/accept_SP
+add wave -noupdate -group {coproc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/accept_SN
+add wave -noupdate -group {coproc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/curr_rd_i
+add wave -noupdate -group {coproc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/cntb_done_i
+add wave -noupdate -group {coproc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/wbits_done_i
+add wave -noupdate -group {coproc fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/cntb_start_o
+add wave -noupdate -expand -group {xif in wrapper} /tb_top/cv32e40x_tb_wrapper_i/xif/compressed_valid
+add wave -noupdate -expand -group {xif in wrapper} /tb_top/cv32e40x_tb_wrapper_i/xif/compressed_ready
+add wave -noupdate -expand -group {xif in wrapper} /tb_top/cv32e40x_tb_wrapper_i/xif/compressed_req
+add wave -noupdate -expand -group {xif in wrapper} /tb_top/cv32e40x_tb_wrapper_i/xif/compressed_resp
+add wave -noupdate -expand -group {xif in wrapper} -color Magenta /tb_top/cv32e40x_tb_wrapper_i/xif/issue_valid
+add wave -noupdate -expand -group {xif in wrapper} /tb_top/cv32e40x_tb_wrapper_i/xif/issue_ready
+add wave -noupdate -expand -group {xif in wrapper} /tb_top/cv32e40x_tb_wrapper_i/xif/issue_req
+add wave -noupdate -expand -group {xif in wrapper} /tb_top/cv32e40x_tb_wrapper_i/xif/issue_resp
+add wave -noupdate -expand -group {xif in wrapper} /tb_top/cv32e40x_tb_wrapper_i/xif/commit_valid
+add wave -noupdate -expand -group {xif in wrapper} /tb_top/cv32e40x_tb_wrapper_i/xif/commit
+add wave -noupdate -expand -group {xif in wrapper} /tb_top/cv32e40x_tb_wrapper_i/xif/mem_valid
+add wave -noupdate -expand -group {xif in wrapper} /tb_top/cv32e40x_tb_wrapper_i/xif/mem_ready
+add wave -noupdate -expand -group {xif in wrapper} /tb_top/cv32e40x_tb_wrapper_i/xif/mem_req
+add wave -noupdate -expand -group {xif in wrapper} /tb_top/cv32e40x_tb_wrapper_i/xif/mem_resp
+add wave -noupdate -expand -group {xif in wrapper} /tb_top/cv32e40x_tb_wrapper_i/xif/mem_result_valid
+add wave -noupdate -expand -group {xif in wrapper} -expand /tb_top/cv32e40x_tb_wrapper_i/xif/mem_result
+add wave -noupdate -expand -group {xif in wrapper} /tb_top/cv32e40x_tb_wrapper_i/xif/result_valid
+add wave -noupdate -expand -group {xif in wrapper} /tb_top/cv32e40x_tb_wrapper_i/xif/result_ready
+add wave -noupdate -expand -group {xif in wrapper} /tb_top/cv32e40x_tb_wrapper_i/xif/result
 add wave -noupdate -group {cntb fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/cntb_i/clk_i
 add wave -noupdate -group {cntb fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/cntb_i/rst_ni
-add wave -noupdate -group {cntb fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/cntb_i/rd_i
-add wave -noupdate -group {cntb fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/cntb_i/start_i
-add wave -noupdate -group {cntb fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/cntb_i/rs0_i
-add wave -noupdate -group {cntb fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/cntb_i/rs1_i
 add wave -noupdate -group {cntb fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/cntb_i/rd_o
-add wave -noupdate -group {cntb fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/cntb_i/cntb_done_o
-add wave -noupdate -group {cntb fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/cntb_i/right_shift_DP
-add wave -noupdate -group {cntb fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/cntb_i/right_shift_DN
-add wave -noupdate -group {cntb fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/cntb_i/state_SN
-add wave -noupdate -group {cntb fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/cntb_i/state_SP
-add wave -noupdate -group {cntb fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/cntb_i/i
-add wave -noupdate -group {and logic cntb} {/tb_top/cv32e40x_tb_wrapper_i/coproc_i/cntb_i/genblk1[2]/cb/rs0_i}
-add wave -noupdate -group {and logic cntb} {/tb_top/cv32e40x_tb_wrapper_i/coproc_i/cntb_i/genblk1[2]/cb/right_shift_i}
-add wave -noupdate -group {and logic cntb} {/tb_top/cv32e40x_tb_wrapper_i/coproc_i/cntb_i/genblk1[2]/cb/top_bits_set_i}
-add wave -noupdate -group {and logic cntb} {/tb_top/cv32e40x_tb_wrapper_i/coproc_i/cntb_i/genblk1[2]/cb/result_o}
-add wave -noupdate -group {and logic cntb check for 8} {/tb_top/cv32e40x_tb_wrapper_i/coproc_i/cntb_i/genblk1[0]/cb/rs0_i}
-add wave -noupdate -group {and logic cntb check for 8} {/tb_top/cv32e40x_tb_wrapper_i/coproc_i/cntb_i/genblk1[0]/cb/right_shift_i}
-add wave -noupdate -group {and logic cntb check for 8} {/tb_top/cv32e40x_tb_wrapper_i/coproc_i/cntb_i/genblk1[0]/cb/top_bits_set_i}
-add wave -noupdate -group {and logic cntb check for 8} {/tb_top/cv32e40x_tb_wrapper_i/coproc_i/cntb_i/genblk1[0]/cb/result_o}
+add wave -noupdate -group {cntb fsm} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/cntb_i/rd_addr_o
 add wave -noupdate -group wbits /tb_top/cv32e40x_tb_wrapper_i/coproc_i/wbits_i/clk_i
 add wave -noupdate -group wbits /tb_top/cv32e40x_tb_wrapper_i/coproc_i/wbits_i/rst_ni
 add wave -noupdate -group wbits /tb_top/cv32e40x_tb_wrapper_i/coproc_i/wbits_i/start_i
-add wave -noupdate -group wbits /tb_top/cv32e40x_tb_wrapper_i/coproc_i/wbits_i/address_i
-add wave -noupdate -group wbits /tb_top/cv32e40x_tb_wrapper_i/coproc_i/wbits_i/inc_addr_o
-add wave -noupdate -group wbits /tb_top/cv32e40x_tb_wrapper_i/coproc_i/wbits_i/offset
-add wave -noupdate -group wbits /tb_top/cv32e40x_tb_wrapper_i/coproc_i/wbits_i/rd_i
-add wave -noupdate -group wbits /tb_top/cv32e40x_tb_wrapper_i/coproc_i/wbits_i/rd_o
+add wave -noupdate -group wbits /tb_top/cv32e40x_tb_wrapper_i/coproc_i/wbits_i/mem_needed_o
 add wave -noupdate -group wbits /tb_top/cv32e40x_tb_wrapper_i/coproc_i/wbits_i/done_o
 add wave -noupdate -group wbits /tb_top/cv32e40x_tb_wrapper_i/coproc_i/wbits_i/state_SN
 add wave -noupdate -group wbits /tb_top/cv32e40x_tb_wrapper_i/coproc_i/wbits_i/state_SP
-add wave -noupdate -group wbits /tb_top/cv32e40x_tb_wrapper_i/coproc_i/wbits_i/start_read_SP
-add wave -noupdate -group wbits /tb_top/cv32e40x_tb_wrapper_i/coproc_i/wbits_i/start_read_SN
-add wave -noupdate -group wbits /tb_top/cv32e40x_tb_wrapper_i/coproc_i/wbits_i/shift_4_sigs_o
-add wave -noupdate -group wbits /tb_top/cv32e40x_tb_wrapper_i/coproc_i/wbits_i/curr_signal_SP
-add wave -noupdate -group wbits /tb_top/cv32e40x_tb_wrapper_i/coproc_i/wbits_i/curr_signal_SN
-add wave -noupdate -group wbits /tb_top/cv32e40x_tb_wrapper_i/coproc_i/wbits_i/i
-add wave -noupdate -group {read mem} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/read_mem_i/clk_i
-add wave -noupdate -group {read mem} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/read_mem_i/rst_ni
-add wave -noupdate -group {read mem} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/read_mem_i/state_SN
-add wave -noupdate -group {read mem} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/read_mem_i/state_SP
-add wave -noupdate -group {read mem} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/read_mem_i/mem_valid_SN
-add wave -noupdate -group {read mem} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/read_mem_i/mem_valid_SP
-add wave -noupdate -group {read mem} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/read_mem_i/last_SN
-add wave -noupdate -group {read mem} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/read_mem_i/last_SP
-add wave -noupdate -group {read mem} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/read_mem_i/data_read_DN
-add wave -noupdate -group {read mem} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/read_mem_i/data_read_DP
-add wave -noupdate -group {rmem interface} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/if_rmem_i/start
-add wave -noupdate -group {rmem interface} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/if_rmem_i/done
-add wave -noupdate -group {rmem interface} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/if_rmem_i/rdata
-add wave -noupdate -group {rmem interface} /tb_top/cv32e40x_tb_wrapper_i/coproc_i/if_rmem_i/addr
+add wave -noupdate -group wbits /tb_top/cv32e40x_tb_wrapper_i/coproc_i/wbits_i/mem_needed_SP
+add wave -noupdate -group wbits /tb_top/cv32e40x_tb_wrapper_i/coproc_i/wbits_i/mem_needed_SN
+add wave -noupdate -group wbits /tb_top/cv32e40x_tb_wrapper_i/coproc_i/wbits_i/ls_resp_SN
+add wave -noupdate -group wbits /tb_top/cv32e40x_tb_wrapper_i/coproc_i/wbits_i/ld_resp_SP
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {82380000 ps} 0}
+WaveRestoreCursors {{Cursor 1} {5355 ns} 0}
 quietly wave cursor active 1
-configure wave -namecolwidth 150
+configure wave -namecolwidth 236
 configure wave -valuecolwidth 100
 configure wave -justifyvalue left
 configure wave -signalnamewidth 1
@@ -729,6 +688,6 @@ configure wave -gridoffset 0
 configure wave -gridperiod 1
 configure wave -griddelta 40
 configure wave -timeline 0
-configure wave -timelineunits ps
+configure wave -timelineunits ns
 update
-WaveRestoreZoom {0 ps} {144721500 ps}
+WaveRestoreZoom {5323 ns} {5455 ns}

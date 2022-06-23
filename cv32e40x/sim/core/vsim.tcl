@@ -28,5 +28,4 @@ add wave -group "and logic cntb check for 8" tb_top/cv32e40x_tb_wrapper_i/coproc
 add wave -group "wbits" sim:/tb_top/cv32e40x_tb_wrapper_i/coproc_i/wbits_i/*
 add wave -group "read mem" sim:/tb_top/cv32e40x_tb_wrapper_i/coproc_i/read_mem_i/*
 add wave -group "rmem interface" sim:/tb_top/cv32e40x_tb_wrapper_i/coproc_i/if_rmem_i/*
-run -a
 #5620ns

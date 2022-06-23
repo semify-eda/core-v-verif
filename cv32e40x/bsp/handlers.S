@@ -79,7 +79,7 @@
 /* exception handling */
 __no_irq_handler:
 	la a0, no_exception_handler_msg
-	jal ra, puts
+//	jal ra, puts
 	j __no_irq_handler
 
 m_software_irq_handler:
@@ -179,28 +179,28 @@ handle_ecall:
 handle_ebreak:
 	/* TODO support debug handling requirements.  */
 	la a0, ebreak_msg
-	jal ra, puts
+	//jal ra, puts
 	j end_handler_incr_mepc
 
 handle_illegal_insn:
 	la a0, illegal_insn_msg
-	jal ra, puts
+	//jal ra, puts
 	j end_handler_incr_mepc
 
 handle_insn_access_fault:
 	la a0, insn_access_fault_msg
-	jal ra, puts
+	//jal ra, puts
 	j end_handler_incr_mepc
 
 handle_insn_bus_fault:
 	la a0, insn_bus_fault_msg
-	jal ra, puts
+	//jal ra, puts
 	/* Do not advnace the mepc, tests should handle this appropriately */
 	j end_handler_ret
 
 handle_unknown:
 	la a0, unknown_msg
-	jal ra, puts
+	//jal ra, puts
 	/* We don't know what interrupt/exception is being handled, so don't
 	   increment mepc.  */
 	j end_handler_ret
@@ -272,12 +272,12 @@ nmi_handler:
 
 handle_data_load_bus_fault:
 	la a0, data_load_bus_fault_msg
-	jal ra, puts
+	//jal ra, puts
 	j nmi_end_handler_ret
 
 handle_data_store_bus_fault:
 	la a0, data_store_bus_fault_msg
-	jal ra, puts
+	//jal ra, puts
 	j nmi_end_handler_ret
 
 nmi_end_handler_ret:
