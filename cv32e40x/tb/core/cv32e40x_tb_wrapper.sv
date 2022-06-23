@@ -16,8 +16,8 @@
 // SPDX-License-Identifier: Apache-2.0 WITH SHL-0.51
 
 module cv32e40x_tb_wrapper import cv32e40x_pkg::*;   
-    #(parameter // Parameters used by TB
-                INSTR_RDATA_WIDTH = 32,
+   #(parameter // Parameters used by TB
+               INSTR_RDATA_WIDTH = 32,
                 RAM_ADDR_WIDTH    = 20,
                 BOOT_ADDR         = 'h80,
                 DM_HALTADDRESS    = 32'h1A11_0800,
@@ -35,27 +35,76 @@ module cv32e40x_tb_wrapper import cv32e40x_pkg::*;
      output logic [31:0] exit_value_o,
      output logic        exit_valid_o);
 
+    localparam JTAG_BOOT            = 'b0;
+    localparam  CLUSTER_ID         = 6'd0;
+    localparam CORE_ID            = 4'd0;
+
+    localparam CORE_MHARTID       = {21'b0, CLUSTER_ID, 1'b0, CORE_ID};
+    localparam NrHarts                               = 1;
+    localparam logic [NrHarts-1:0] SELECTABLE_HARTS  = 1 << CORE_MHARTID;
+    localparam HARTINFO           = {8'h0, 4'h2, 3'b0, 1'b1, dm::DataCount, dm::DataAddr};
+
     // signals connecting core to memory
-    logic                         instr_req;
-    logic                         instr_gnt;
-    logic                         instr_rvalid;
-    logic [31:0]                  instr_addr;
+    logic                        instr_req;
+    logic                        instr_gnt;
+    logic                        instr_rvalid;
+    logic [31:0]                 instr_addr;
     logic [INSTR_RDATA_WIDTH-1:0] instr_rdata;
 
-    logic                         data_req;
-    logic                         data_gnt;
-    logic                         data_rvalid;
-    logic [31:0]                  data_addr;
-    logic                         data_we;
-    logic [3:0]                   data_be;
-    logic [31:0]                  data_rdata;
-    logic [31:0]                  data_wdata;
+    logic                        data_req;
+    logic                        data_gnt;
+   logic                         data_rvalid;
+    logic [31:0]                 data_addr;
+    logic                        data_we;
+    logic [3:0]                  data_be;
+    logic [31:0]                 data_rdata;
+    logic [31:0]                 data_wdata;
 
-    // signals to debug unit
-    logic                         debug_req;
+    // jtag openocd bridge signals
+    logic                        sim_jtag_tck;
+    logic                        sim_jtag_tms;
+    logic                        sim_jtag_tdi;
+    logic                        sim_jtag_trstn;
+    logic                        sim_jtag_tdo;
+    logic [31:0]                 sim_jtag_exit;
+    logic                        sim_jtag_enable;
+
+    // signals for debug unit
+    logic                        debug_req_ready;
+    dm::dmi_resp_t               debug_resp;
+    logic                        jtag_req_valid;
+    dm::dmi_req_t                jtag_dmi_req;
+    logic                        jtag_resp_ready;
+    logic                        jtag_resp_valid;
+    logic [NrHarts-1:0]          dm_debug_req;
+    logic                        ndmreset, ndmreset_n;
+
+    // debug unit slave interface
+    logic                        dm_grant;
+    logic                        dm_rvalid;
+    logic                        dm_req;
+    logic                        dm_we;
+    logic [31:0]                 dm_addr;
+    logic [31:0]                 dm_wdata;
+    logic [31:0]                 dm_rdata;
+    logic [3:0]                  dm_be;
+   logic                         dm_gnt;
+
+    // debug unit master interface (system bus access)
+    logic                        sb_req;
+    logic [31:0]                 sb_addr;
+    logic                        sb_we;
+    logic [31:0]                 sb_wdata;
+    logic [3:0]                  sb_be;
+    logic                        sb_gnt;
+    logic                        sb_rvalid;
+    logic [31:0]                 sb_rdata;
+
+    // make jtag bridge work
+    assign sim_jtag_enable = JTAG_BOOT;
 
     // irq signals (not used)
-    logic [0:31]                  irq;
+   logic                         irq;
     logic [0:4]                   irq_id_in;
     logic                         irq_ack;
     logic [0:4]                   irq_id_out;
@@ -63,6 +112,10 @@ module cv32e40x_tb_wrapper import cv32e40x_pkg::*;
 
    logic [SAMPLES_WIDTH - 1: 0]   samples_csr_i;
    logic [SIGNALS_WIDTH - 1: 0]   signals_csr_i;
+
+   logic                          core_sleep_o;
+
+   
    
 
 
@@ -158,7 +211,7 @@ module cv32e40x_tb_wrapper import cv32e40x_pkg::*;
          .fencei_flush_req_o     (                       ),
          .fencei_flush_ack_i     ( 1'b0                  ),
 
-         .debug_req_i            ( debug_req             ),
+         .debug_req_i            ( dm_debug_req),
          .debug_havereset_o      (                       ),
          .debug_running_o        (                       ),
          .debug_halted_o         (                       ),
@@ -172,44 +225,130 @@ module cv32e40x_tb_wrapper import cv32e40x_pkg::*;
          .signals_csr_o (signals_csr_i)
        );
 
-    // this handles read to RAM and memory mapped pseudo peripherals
-    mm_ram
-        #(.RAM_ADDR_WIDTH (RAM_ADDR_WIDTH),
-          .INSTR_RDATA_WIDTH (INSTR_RDATA_WIDTH))
-    ram_i
-        (.clk_i          ( clk_i                                     ),
-         .rst_ni         ( rst_ni                                    ),
-         .dm_halt_addr_i ( DM_HALTADDRESS                            ),
+ // this handles read to RAM and memory mapped pseudo peripherals
+    mm_ram #(
+        .RAM_ADDR_WIDTH (RAM_ADDR_WIDTH),
+        .INSTR_RDATA_WIDTH (INSTR_RDATA_WIDTH),
+        .JTAG_BOOT(JTAG_BOOT)
+    ) ram_i (
+        .clk_i          ( clk_i           ),
+        .rst_ni         ( ndmreset_n      ),
 
-         .instr_req_i    ( instr_req                                 ),
-         .instr_addr_i   ( { {10{1'b0}},
-                             instr_addr[RAM_ADDR_WIDTH-1:0]
-                           }                                         ),
-         .instr_rdata_o  ( instr_rdata                               ),
-         .instr_rvalid_o ( instr_rvalid                              ),
-         .instr_gnt_o    ( instr_gnt                                 ),
+        // core instruction access
+        .instr_req_i    ( instr_req       ),
+        .instr_addr_i   ( instr_addr      ),
+        .instr_rdata_o  ( instr_rdata     ),
+        .instr_rvalid_o ( instr_rvalid    ),
+        .instr_gnt_o    ( instr_gnt       ),
 
-         .data_req_i     ( data_req                                  ),
-         .data_addr_i    ( data_addr                                 ),
-         .data_we_i      ( data_we                                   ),
-         .data_be_i      ( data_be                                   ),
-         .data_wdata_i   ( data_wdata                                ),
-         .data_rdata_o   ( data_rdata                                ),
-         .data_rvalid_o  ( data_rvalid                               ),
-         .data_gnt_o     ( data_gnt                                  ),
+        // core data access
+        .data_req_i     ( data_req        ),
+        .data_addr_i    ( data_addr       ),
+        .data_we_i      ( data_we         ),
+        .data_be_i      ( data_be         ),
+        .data_wdata_i   ( data_wdata      ),
+        .data_rdata_o   ( data_rdata      ),
+        .data_rvalid_o  ( data_rvalid     ),
+        .data_gnt_o     ( data_gnt        ),
 
-         .irq_id_i       ( irq_id_out                                ),
-         .irq_ack_i      ( irq_ack                                   ),
-         .irq_o          ( irq                                       ),
+        // system bus access from debug unit
+        .sb_req_i       ( sb_req          ),
+        .sb_addr_i      ( sb_addr         ),
+        .sb_we_i        ( sb_we           ),
+        .sb_be_i        ( sb_be           ),
+        .sb_wdata_i     ( sb_wdata        ),
+        .sb_rdata_o     ( sb_rdata        ),
+        .sb_rvalid_o    ( sb_rvalid       ),
+        .sb_gnt_o       ( sb_gnt          ),
 
-         .debug_req_o    ( debug_req                                 ),
+        // access to debug unit
+        .dm_req_o       ( dm_req          ),
+        .dm_addr_o      ( dm_addr         ),
+        .dm_we_o        ( dm_we           ),
+        .dm_be_o        ( dm_be           ),
+        .dm_wdata_o     ( dm_wdata        ),
+        .dm_rdata_i     ( dm_rdata        ),
+        .dm_rvalid_i    ( dm_rvalid       ),
+        .dm_gnt_i       ( dm_gnt          ),
 
-         .pc_core_id_i   ( cv32e40x_core_i.if_id_pipe.pc             ),
 
-         .tests_passed_o ( tests_passed_o                            ),
-         .tests_failed_o ( tests_failed_o                            ),
-         .exit_valid_o   ( exit_valid_o                              ),
-         .exit_value_o   ( exit_value_o                              ));
+        .irq_id_i       ( irq_id_out      ),
+        .irq_ack_i      ( irq_ack         ),
+        .irq_id_o       ( irq_id_in       ),
+        .irq_o          ( irq             ),
+
+        .tests_passed_o ( tests_passed_o  ),
+        .tests_failed_o ( tests_failed_o  )
+    );
+
+   //     _ _____  _    ____ 
+   //    | |_   _|/ \  / ___|
+   //  _  | | | | / _ \| |  _ 
+   // | |_| | | |/ ___ \ |_| |
+   //  \___/  |_/_/   \_\____|
+   
+
+   // debug subsystem
+    dmi_jtag #(
+        .IdcodeValue          ( 32'h249511C3    )
+    ) i_dmi_jtag (
+        .clk_i                ( clk_i           ),
+        .rst_ni               ( rst_ni          ),
+        .testmode_i           ( 1'b0            ),
+        .dmi_req_o            ( jtag_dmi_req    ),
+        .dmi_req_valid_o      ( jtag_req_valid  ),
+        .dmi_req_ready_i      ( debug_req_ready ),
+        .dmi_resp_i           ( debug_resp      ),
+        .dmi_resp_ready_o     ( jtag_resp_ready ),
+        .dmi_resp_valid_i     ( jtag_resp_valid ),
+        .dmi_rst_no           (                 ), // not connected
+        .tck_i                ( sim_jtag_tck    ),
+        .tms_i                ( sim_jtag_tms    ),
+        .trst_ni              ( sim_jtag_trstn  ),
+        .td_i                 ( sim_jtag_tdi    ),
+        .td_o                 ( sim_jtag_tdo    ),
+        .tdo_oe_o             (                 )
+    );
+
+    dm_top #(
+       .NrHarts           ( NrHarts           ),
+       .BusWidth          ( 32                ),
+       .SelectableHarts   ( SELECTABLE_HARTS  )
+    ) i_dm_top (
+
+       .clk_i             ( clk_i             ),
+       .rst_ni            ( rst_ni            ),
+       .testmode_i        ( 1'b0              ),
+       .ndmreset_o        ( ndmreset          ),
+       .dmactive_o        (                   ), // active debug session TODO
+       .debug_req_o       ( dm_debug_req      ),
+       .unavailable_i     ( ~SELECTABLE_HARTS ),
+       .hartinfo_i        ( HARTINFO          ),
+
+       .slave_req_i       ( dm_req            ),
+       .slave_we_i        ( dm_we             ),
+       .slave_addr_i      ( dm_addr           ),
+       .slave_be_i        ( dm_be             ),
+       .slave_wdata_i     ( dm_wdata          ),
+       .slave_rdata_o     ( dm_rdata          ),
+
+       .master_req_o      ( sb_req            ),
+       .master_add_o      ( sb_addr           ),
+       .master_we_o       ( sb_we             ),
+       .master_wdata_o    ( sb_wdata          ),
+       .master_be_o       ( sb_be             ),
+       .master_gnt_i      ( sb_gnt            ),
+       .master_r_valid_i  ( sb_rvalid         ),
+       .master_r_rdata_i  ( sb_rdata          ),
+
+       .dmi_rst_ni        ( rst_ni            ),
+       .dmi_req_valid_i   ( jtag_req_valid    ),
+       .dmi_req_ready_o   ( debug_req_ready   ),
+       .dmi_req_i         ( jtag_dmi_req      ),
+       .dmi_resp_valid_o  ( jtag_resp_valid   ),
+       .dmi_resp_ready_i  ( jtag_resp_ready   ),
+       .dmi_resp_o        ( debug_resp        )
+    );
 
     coproc coproc_i ( .clk_i (clk_i),
                       .rst_ni (rst_ni),
