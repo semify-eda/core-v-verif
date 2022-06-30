@@ -27,13 +27,17 @@ module cv32e40x_tb_wrapper import cv32e40x_pkg::*;
                 NUM_MHPMCOUNTERS  = 1
     )
     (input logic         clk_i,
+     input               clk_25mhz,
      input logic         rst_ni,
-
+     
      input logic         fetch_enable_i,
      output logic        tests_passed_o,
      output logic        tests_failed_o,
      output logic [31:0] exit_value_o,
-     output logic        exit_valid_o);
+     output logic        exit_valid_o
+     );
+
+   assign clk = clk_25mhz;
 
     localparam JTAG_BOOT            = 'b0;
     localparam  CLUSTER_ID         = 6'd0;
@@ -53,7 +57,7 @@ module cv32e40x_tb_wrapper import cv32e40x_pkg::*;
 
     logic                        data_req;
     logic                        data_gnt;
-   logic                         data_rvalid;
+    logic                         data_rvalid;
     logic [31:0]                 data_addr;
     logic                        data_we;
     logic [3:0]                  data_be;
@@ -139,7 +143,7 @@ module cv32e40x_tb_wrapper import cv32e40x_pkg::*;
     cv32e40x_core_i
         (
          // Clock and Reset
-         .clk_i                  ( clk_i                 ),
+         .clk_i                  ( clk                ),
          .rst_ni                 ( rst_ni                ),
 
          .scan_cg_en_i           ( '0                    ),
@@ -231,7 +235,7 @@ module cv32e40x_tb_wrapper import cv32e40x_pkg::*;
         .INSTR_RDATA_WIDTH (INSTR_RDATA_WIDTH),
         .JTAG_BOOT(JTAG_BOOT)
     ) ram_i (
-        .clk_i          ( clk_i           ),
+        .clk_i          ( clk           ),
         .rst_ni         ( ndmreset_n      ),
 
         // core instruction access
@@ -292,7 +296,7 @@ module cv32e40x_tb_wrapper import cv32e40x_pkg::*;
     dmi_jtag #(
         .IdcodeValue          ( 32'h249511C3    )
     ) i_dmi_jtag (
-        .clk_i                ( clk_i           ),
+        .clk_i                ( clk          ),
         .rst_ni               ( rst_ni          ),
         .testmode_i           ( 1'b0            ),
         .dmi_req_o            ( jtag_dmi_req    ),
@@ -316,7 +320,7 @@ module cv32e40x_tb_wrapper import cv32e40x_pkg::*;
        .SelectableHarts   ( SELECTABLE_HARTS  )
     ) i_dm_top (
 
-       .clk_i             ( clk_i             ),
+       .clk_i             ( clk             ),
        .rst_ni            ( rst_ni            ),
        .testmode_i        ( 1'b0              ),
        .ndmreset_o        ( ndmreset          ),
@@ -350,7 +354,7 @@ module cv32e40x_tb_wrapper import cv32e40x_pkg::*;
        .dmi_resp_o        ( debug_resp        )
     );
 
-    coproc coproc_i ( .clk_i (clk_i),
+    coproc coproc_i ( .clk_i (clk),
                       .rst_ni (rst_ni),
                       .xif_compressed (xif),
                       .xif_issue (xif),

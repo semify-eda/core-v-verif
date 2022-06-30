@@ -210,9 +210,7 @@ module mm_ram #(
                     ram_data_wdata = sb_wdata_i;
                     ram_data_we = sb_we_i;
                     ram_data_be = sb_be_i;
-
-                end else begin
-                    $error("Writing to unmapped memory at %x", sb_addr_i);
+                   
                 end
 
             end else begin // handle reads
@@ -387,25 +385,6 @@ module mm_ram #(
     end
 
 
-`ifndef VERILATOR
-    // make sure we don't access any unmapped memory
-
-    out_of_bounds_write: assert property
-    (@(posedge clk_i) disable iff (!rst_ni)
-        (data_req_i && data_gnt_o && data_we_i |->
-        (data_addr_i >= STDOUT_BASE && data_addr_i < STDOUT_BASE + STDOUT_LEN)
-        || (data_addr_i >= DEBUG_BASE && data_addr_i < DEBUG_BASE + DEBUG_LEN)
-        || (data_addr_i >= SRAM_BASE && data_addr_i < SRAM_BASE + SRAM_LEN)
-        || (data_addr_i >= 0 && data_addr_i < SRAM_LEN)))
-        else $error("out of bounds write to %08x with %08x",
-                    data_addr_i, data_wdata_i);
-
-   out_of_bounds_read: assert property
-    (@(posedge clk_i) disable iff (!rst_ni)
-        (select_rdata_q != UNMAP))
-        else $error("out of bounds read");
-`endif
-
     // make sure we select the proper read data
     always_comb begin: read_mux_sb_data_instr
         data_rdata_o  = '0;
@@ -435,24 +414,6 @@ module mm_ram #(
             end
 
         end else if (select_rdata_q == IDLE_READ) begin
-        end
-    end
-
-    // print to stdout pseudo peripheral
-    always_ff @(posedge clk_i, negedge rst_ni) begin: print_peripheral
-        if(print_valid) begin
-            if ($test$plusargs("verbose_read_writes")) begin
-                if (32 <= print_wdata && print_wdata < 128)
-                    $display("OUT: '%c'", print_wdata[7:0]);
-                else
-                    $display("OUT: %3d", print_wdata);
-
-            end else begin
-                $write("%c", print_wdata[7:0]);
-`ifndef VERILATOR
-                $fflush();
-`endif
-            end
         end
     end
 
@@ -491,13 +452,6 @@ module mm_ram #(
 
             end
         end
-    end
-
-    // show writes if requested
-    always_ff @(posedge clk_i, negedge rst_ni) begin: verbose_writes
-        if ($test$plusargs("verbose_read_writes") && data_req_i && data_we_i)
-            $display("write addr=0x%08x: data=0x%08x",
-                     data_addr_i, data_wdata_i);
     end
 
     // debug rom for booting directly to the firmware
