@@ -58,7 +58,7 @@ endif
 TEST := "hello-world"
 SIM_TEST_PROGRAM_RESULTS := ./hello-world
 SIM_BSP_RESULTS := ./test_binaryf
-CV_SW_MARCH := rv32imc_zbs #rv32i
+CV_SW_MARCH := rv32im_zbs #rv32i
 ASM = ../../../../C #set
 PATH_TO_C_FILES = ../../../../C/
 TEST_FILES = $(PATH_TO_C_FILES)/main.c $(PATH_TO_C_FILES)/rle.c $(PATH_TO_C_FILES)/data.c
@@ -73,6 +73,9 @@ vsim_defines := +firmware=./hello-world/hello-world.hex \
 compile:
 	#make /hello-world/hello-world.elf
 	make  /hello-world/hello-world.hex
+
+bintohex:
+	python ../../../../py/bintohex.py ./hello-world/hello-world.hex 392000 > ./hello-world/hello-world.hex
 
 #############################################
 # vsim without uvm

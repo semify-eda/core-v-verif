@@ -19,6 +19,7 @@ add wave -group "ext_if_in_id_stage" /tb_top/cv32e40x_tb_wrapper_i/cv32e40x_core
 add wave -group "compressed decoder" /tb_top/cv32e40x_tb_wrapper_i/cv32e40x_core_i/if_stage_i/compressed_decoder_i/*
 add wave -group "ex_stage" /tb_top/cv32e40x_tb_wrapper_i/cv32e40x_core_i/ex_stage_i/*
 add wave -group "register file" /tb_top/cv32e40x_tb_wrapper_i/cv32e40x_core_i/register_file_wrapper_i/register_file_i/*
+add wave -group "dp ram" sim:/tb_top/cv32e40x_tb_wrapper_i/ram_i/dp_ram_i/*
 add wave -divider "extension" 
 add wave -group "xif in wrapper"  /tb_top/cv32e40x_tb_wrapper_i/xif/*
 add wave -group "copopoc fsm" /tb_top/cv32e40x_tb_wrapper_i/coproc_i/*

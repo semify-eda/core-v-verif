@@ -425,7 +425,7 @@ endif
 	@echo "$(BANNER)"
 	@echo "* Generating hexfile, readelf and objdump files"
 	@echo "$(BANNER)"
-	$(RISCV_EXE_PREFIX)objcopy -O verilog \
+	$(RISCV_EXE_PREFIX)objcopy -O binary \
 		.$< \
 		.$@
 	$(RISCV_EXE_PREFIX)readelf -a .$< > .$*.readelf
