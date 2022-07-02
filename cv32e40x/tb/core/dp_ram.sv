@@ -11,7 +11,7 @@
 
 module dp_ram
     #(parameter ADDR_WIDTH = 8,
-      parameter INSTR_RDATA_WIDTH = 32)
+      parameter INSTR_RDATA_WIDTH = 128)
     (input logic                  clk_i,
 
      input logic                          en_a_i,
@@ -28,36 +28,42 @@ module dp_ram
      input logic                          we_b_i,
      input logic [3:0]                    be_b_i);
 
-    localparam words = 2**ADDR_WIDTH;
+    localparam bytes = 2**ADDR_WIDTH;
 
-   logic [31:0] mem[words];
-   logic [ADDR_WIDTH-1:0]           addr_a_int;
-   logic [ADDR_WIDTH-1:0]           mem_a_addr, mem_b_addr, addr_b_1, addr_b_2, addr_b_3;
-   //assign addr_a_int = {addr_a_i[ADDR_WIDTH-1:2], 2'b0};
+    logic [7:0]                      mem[bytes];
+    logic [ADDR_WIDTH-1:0]           addr_a_int;
+    logic [ADDR_WIDTH-1:0]           addr_b_int;
 
-   always_comb mem_a_addr = addr_a_i >> 2;
-   always_comb mem_b_addr = addr_b_i >> 2;
- 
+    always_comb addr_a_int = {addr_a_i[ADDR_WIDTH-1:2], 2'b0};
+    always_comb addr_b_int = {addr_b_i[ADDR_WIDTH-1:2], 2'b0};
+
     always @(posedge clk_i) begin
-       //rdata_a_o <= mem[addr_a_i];
-       //for (int i = 0; i < INSTR_RDATA_WIDTH/8; i++) begin
-          //rdata_a_o[(i*8)+: 8] <= mem[addr_a_i + i];
-        //end
-       rdata_a_o <= mem[mem_a_addr];
-       rdata_b_o <= mem[mem_b_addr];
-      
+        for (int i = 0; i < INSTR_RDATA_WIDTH/8; i++) begin
+            rdata_a_o[(i*8)+: 8] <= mem[addr_a_int +  i];
+        end
+
         /* addr_b_i is the actual memory address referenced */
         if (en_b_i) begin
             /* handle writes */
-            if (we_b_i) begin  
-               if (be_b_i[0]) mem[mem_b_addr] [0+:8]  <= wdata_b_i[ 0+:8];
-               if (be_b_i[1]) mem[mem_a_addr] [8+:8] <= wdata_b_i[ 8+:8];
-               if (be_b_i[2]) mem[mem_b_addr] [16+:8] <=  wdata_b_i[16+:8];
-               if (be_b_i[3]) mem[mem_b_addr] [24+:8] <= wdata_b_i[24+:8];
+            if (we_b_i) begin
+                if (be_b_i[0]) mem[addr_b_int    ] <= wdata_b_i[ 0+:8];
+                if (be_b_i[1]) mem[addr_b_int + 1] <= wdata_b_i[ 8+:8];
+                if (be_b_i[2]) mem[addr_b_int + 2] <= wdata_b_i[16+:8];
+                if (be_b_i[3]) mem[addr_b_int + 3] <= wdata_b_i[24+:8];
             end
+            /* handle reads */
+            else begin
+                if ($test$plusargs("verbose"))
+                    $display("read  addr=0x%08x: data=0x%08x", addr_b_int,
+                             {mem[addr_b_int + 3], mem[addr_b_int + 2],
+                              mem[addr_b_int + 1], mem[addr_b_int + 0]});
 
+                rdata_b_o[ 7: 0] <= mem[addr_b_int    ];
+                rdata_b_o[15: 8] <= mem[addr_b_int + 1];
+                rdata_b_o[23:16] <= mem[addr_b_int + 2];
+                rdata_b_o[31:24] <= mem[addr_b_int + 3];
+            end
         end
     end
-
 
 endmodule // dp_ram

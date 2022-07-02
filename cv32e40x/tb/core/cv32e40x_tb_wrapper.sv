@@ -125,7 +125,7 @@ module cv32e40x_tb_wrapper import cv32e40x_pkg::*;
 
    // eXtension Interface
     if_xif #(
-             .X_NUM_RS    ( 3  ),
+             .X_NUM_RS    ( 2  ),
              .X_MISA      (32'h0 ) // 32'b01000000100000000000000000000000)
              ) xif();
 
@@ -135,7 +135,7 @@ module cv32e40x_tb_wrapper import cv32e40x_pkg::*;
                  .NUM_MHPMCOUNTERS (NUM_MHPMCOUNTERS),
                     .B_EXT (1),
                     .X_EXT (1'b1), //enable hardware for xtension interface
-                    .X_NUM_RS (3)  // we need three read ports form memory, to read 3 sorce regs at the same time
+                    .X_NUM_RS (2)  // we need three read ports form memory, to read 3 sorce regs at the same time
                 )
     cv32e40x_core_i
         (

@@ -58,7 +58,7 @@ endif
 TEST := "hello-world"
 SIM_TEST_PROGRAM_RESULTS := ./hello-world
 SIM_BSP_RESULTS := ./test_binaryf
-CV_SW_MARCH := rv32im_zbs #rv32i
+CV_SW_MARCH := rv32imc_zbs #rv32i
 ASM = ../../../../C #set
 PATH_TO_C_FILES = ../../../../C/
 TEST_FILES = $(PATH_TO_C_FILES)/main.c $(PATH_TO_C_FILES)/rle.c $(PATH_TO_C_FILES)/data.c
@@ -75,16 +75,16 @@ compile:
 	make  /hello-world/hello-world.hex
 
 bintohex:
-	python ../../../../py/bintohex.py ./hello-world/hello-world.hex 392000 > ./hello-world/hello-world.hex
+	python ../../../../py/bintohex.py ./hello-world/hello-world.hex 392000 > ./hello-world/hello-world32.hex
 
 #############################################
 # vsim without uvm
 vsim: #define verilator to dissable import of uvm files
 	rm -f pc.out #delete pc counter monitored form last sim
-	@echo "* Compiling CORE TB and CV32E40X with VSIM"
+	@echo "* Compiling CORE TB and CV32E40X with VSIM",
 	vlog +acc -work ./work -f $(CV_CORE_MANIFEST) -sv $(VSIM_TB_FILES) \
 		            +define+VERILATOR +define+verbose -svinputport=net
-	vsim ./work.tb_top +firmware=./hello-world/hello-world.hex \
+	vsim ./work.tb_top \
 							$(vsim_defines) -do "do vsim.tcl" \
               -do "run -a"
 
@@ -227,7 +227,7 @@ TBSRC_PKG   := $(TBSRC_CORE)/tb_riscv/include/perturbation_defines.sv
 TBSRC       := $(TBSRC_CORE)/tb_top.sv \
                $(TBSRC_CORE)/cv32e40x_tb_wrapper.sv \
                $(TBSRC_CORE)/mm_ram.sv \
-               $(TBSRC_CORE)/dp_ram.sv \
+               $(TBSRC_CORE)/dps_ram.sv \
                $(TBSRC_CORE)/tb_riscv/riscv_random_stall.sv \
                $(TBSRC_CORE)/tb_riscv/riscv_random_interrupt_generator.sv \
                $(TBSRC_CORE)/tb_riscv/riscv_rvalid_stall.sv \
@@ -271,7 +271,8 @@ VSIM_TB_FILES  := $(TBSRC_CORE)/tb_top.sv \
                $(TBSRC_CORE)/tb_riscv/riscv_rvalid_stall.sv \
                $(TBSRC_CORE)/tb_riscv/riscv_gnt_stall.sv \
                $(TBSRC_CORE)/mm_ram.sv \
-               $(TBSRC_CORE)/dp_ram.sv
+               $(TBSRC_CORE)/sp_byteram.sv \
+               $(TBSRC_CORE)/sp_4byteram.sv
 
 # Shorthand rules for convience
 CV_CORE_pkg: clone_$(CV_CORE_LC)_rtl

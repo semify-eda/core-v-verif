@@ -463,26 +463,34 @@ module mm_ram #(
     );
 
 
-    // instantiate the ram
-    dp_ram #(
+    // instantiate the rom for binary with memory of bytes
+    sp_byteram #(
         .ADDR_WIDTH (RAM_ADDR_WIDTH),
         .INSTR_RDATA_WIDTH (INSTR_RDATA_WIDTH)
-    ) dp_ram_i (
+    ) sp_byteram_i (
         .clk_i     ( clk_i         ),
 
-        .en_a_i    ( ram_instr_req                      ),
-        .addr_a_i  ( ram_instr_addr[RAM_ADDR_WIDTH-1:0] ),
-        .wdata_a_i ( '0                                 ),	// Not writing so ignored
-        .rdata_a_o ( ram_instr_rdata                    ),
-        .we_a_i    ( '0                                 ),
-        .be_a_i    ( 4'b1111                            ),	// Always want 32-bits
+        .en_i    ( ram_instr_req                      ),
+        .addr_i  ( ram_instr_addr[RAM_ADDR_WIDTH-1:0] ),
+        .wdata_i ( '0                                 ),	// Not writing so ignored
+        .rdata_o ( ram_instr_rdata                    ),
+        .we_i    ( '0                                 ),
+        .be_i    ( 4'b1111                            )	// Always want 32-bits
+     );
 
-        .en_b_i    ( ram_data_req    ),
-        .addr_b_i  ( ram_data_addr   ),
-        .wdata_b_i ( ram_data_wdata  ),
-        .rdata_b_o ( ram_data_rdata  ),
-        .we_b_i    ( ram_data_we     ),
-        .be_b_i    ( ram_data_be     )
+   // data ram with memory of 4byte per addr
+    sp_4byteram #(
+        .ADDR_WIDTH (RAM_ADDR_WIDTH),
+        .INSTR_RDATA_WIDTH (INSTR_RDATA_WIDTH)
+    ) sp_4byteram_i (
+        .clk_i     ( clk_i         ),
+
+        .en_i    ( ram_data_req    ),
+        .addr_i  ( ram_data_addr   ),
+        .wdata_i ( ram_data_wdata  ),
+        .rdata_o ( ram_data_rdata  ),
+        .we_i    ( ram_data_we     ),
+        .be_i    ( ram_data_be     )
      );
 
     // do the handshacking stuff by assuming we always react in one cycle

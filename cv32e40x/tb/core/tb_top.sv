@@ -17,7 +17,7 @@
 
 module tb_top
     #(parameter INSTR_RDATA_WIDTH = 32,
-      parameter RAM_ADDR_WIDTH = 22,
+      parameter RAM_ADDR_WIDTH = 12,
       parameter BOOT_ADDR  = 'h80);
 
     // comment to record execution trace
@@ -70,7 +70,7 @@ module tb_top
             if($test$plusargs("verbose"))
                 $display("[TESTBENCH] @ t=%0t: loading firmware %0s",
                          $time, firmware);
-            $readmemh(firmware, cv32e40x_tb_wrapper_i.ram_i.dp_ram_i.mem);
+            $readmemh(firmware, cv32e40x_tb_wrapper_i.ram_i.sp_byteram_i.mem);
         end else begin
             $display("No firmware specified");
             $finish;
