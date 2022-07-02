@@ -62,7 +62,10 @@ module mm_ram #(
     output logic                         irq_o,
 
     output logic                         tests_passed_o,
-    output logic                         tests_failed_o
+    output logic                         tests_failed_o,
+
+   input ser_rx,
+   output ser_tx
 );
 
     import dm_memory_map_pkg::*;
@@ -123,6 +126,14 @@ module mm_ram #(
     logic                          timer_val_valid;
     logic [31:0]                   timer_wdata;
 
+   //uart logic
+   logic                           write_div_reg, uart_dwrite, uart_dread;
+   logic [31:0]               uart_data_wdata;
+   logic [31:0]               uart_data_rdata;
+
+   
+   
+
 
     // uhh, align?
     always_comb data_addr_aligned = {data_addr_i[31:2], 2'b0};
@@ -164,6 +175,11 @@ module mm_ram #(
 
         tests_passed_o = '0;
         tests_failed_o = '0;
+
+       write_div_reg = '0;
+       uart_dwrite = '0;
+       uart_dread = '0;
+       uart_data_wdata = '0;
 
 
         // memory map:
@@ -283,6 +299,11 @@ module mm_ram #(
                     dm_be     = data_be_i;
                     dm_wdata  = data_wdata_i;
 
+                end else if (data_addr_i >= UART_BASE && data_addr_i < UART_BASE + UART_LEN) begin
+                   uart_dwrite = '1;
+                   uart_data_wdata = data_wdata_i;
+        
+
                 end else if ((data_addr_i >= SRAM_BASE && data_addr_i < SRAM_BASE + SRAM_LEN) ||
                                              (data_addr_i >= 0 && data_addr_i < SRAM_LEN)) begin
                     select_wdata_d  = CORE;
@@ -292,7 +313,6 @@ module mm_ram #(
                     ram_data_we = data_we_i;
                     ram_data_be = data_be_i;
 
-                end else begin
                 end
 
             end else begin // handle reads
@@ -492,6 +512,27 @@ module mm_ram #(
         .we_i    ( ram_data_we     ),
         .be_i    ( ram_data_be     )
      );
+
+
+
+  //UART
+   uart uart_i (
+		.clk         (clk_i         ),
+		.resetn      (rst_ni      ),
+
+		.ser_tx      (ser_tx      ),
+		.ser_rx      (ser_rx      ),
+
+		.reg_div_we  (write_div_reg),
+		.reg_div_di  (ram_data_wdata),
+		.reg_div_do  (),
+
+		.reg_dat_we  (uart_dwrite),
+		.reg_dat_re  (uart_dread),
+	  .reg_dat_di  (uart_data_wdata),
+		.reg_dat_do  (uart_data_rdata),
+		.reg_dat_wait()
+	);
 
     // do the handshacking stuff by assuming we always react in one cycle
     assign dm_req_o    = dm_req;
