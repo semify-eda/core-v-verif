@@ -32,7 +32,9 @@ module cv32e40x_tb_wrapper import cv32e40x_pkg::*;
      output logic        tests_passed_o,
      output logic        tests_failed_o,
      output logic [31:0] exit_value_o,
-     output logic        exit_valid_o
+     output logic        exit_valid_o,
+     input logic         ser_rx_i,
+     output logic        ser_tx_o
      );
 
 
@@ -279,7 +281,9 @@ module cv32e40x_tb_wrapper import cv32e40x_pkg::*;
         .irq_o          ( irq             ),
 
         .tests_passed_o ( tests_passed_o  ),
-        .tests_failed_o ( tests_failed_o  )
+        .tests_failed_o ( tests_failed_o  ),
+        .ser_rx_i (ser_rx_i),
+        .ser_tx_o (ser_tx_o)
     );
 
    //     _ _____  _    ____ 

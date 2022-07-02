@@ -64,8 +64,8 @@ module mm_ram #(
     output logic                         tests_passed_o,
     output logic                         tests_failed_o,
 
-   input ser_rx,
-   output ser_tx
+   input ser_rx_i,
+   output ser_tx_o
 );
 
     import dm_memory_map_pkg::*;
@@ -127,7 +127,8 @@ module mm_ram #(
     logic [31:0]                   timer_wdata;
 
    //uart logic
-   logic                           write_div_reg, uart_dwrite, uart_dread;
+   logic [3:0]                     write_div_reg;
+   logic                           uart_dwrite, uart_dread;
    logic [31:0]               uart_data_wdata;
    logic [31:0]               uart_data_rdata;
 
@@ -520,8 +521,8 @@ module mm_ram #(
 		.clk         (clk_i         ),
 		.resetn      (rst_ni      ),
 
-		.ser_tx      (ser_tx      ),
-		.ser_rx      (ser_rx      ),
+		.ser_tx      (ser_tx_o      ),
+		.ser_rx      (ser_rx_i      ),
 
 		.reg_div_we  (write_div_reg),
 		.reg_div_di  (ram_data_wdata),
