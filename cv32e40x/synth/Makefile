@@ -4,6 +4,7 @@
 cv32e40x_core_files := /home/mario/uni/sem10/bachelorarbeit/gitclone/semify_brle/core-v-verif/core-v-cores/cv32e40x/rtl
 verilog_tb_files := /home/mario/uni/sem10/bachelorarbeit/gitclone/semify_brle/core-v-verif/cv32e40x/tb/core
 hexfile :=  /home/mario/uni/sem10/bachelorarbeit/gitclone/semify_brle/core-v-verif/cv32e40x/sim/core/hello-world/hello-world.hex
+yosys_exe := /run/media/mario/DATA_SSD/linux_data/gitclone/yosys/yosys
 
 all: yosys ulx3s_out ulx3s.bit prog_ulx3s
 
@@ -18,6 +19,7 @@ sv2v: cphex
        $(cv32e40x_core_files)/include/*.sv \
        $(cv32e40x_core_files)/*.sv \
        $(cv32e40x_core_files)/jtag_dbg/*.sv \
+       $(cv32e40x_core_files)/uart/*.sv \
        $(cv32e40x_core_files)/common_pulp_cells/*.sv \
        $(verilog_tb_files)/*.sv \
 
@@ -25,9 +27,10 @@ sv2v: cphex
 	rm  $(verilog_tb_files)/tb_top_verilator.v
 
 yosys: sv2v
-	yosys -ql ulx3s-yosys.log -p "read -sv $(verilog_tb_files)/*.v" \
+	$(yosys_exe) -ql ulx3s-yosys.log -p "read -sv $(verilog_tb_files)/*.v" \
 																 -p	"read -sv $(cv32e40x_core_files)/*.v" \
 																 -p	"read -sv $(cv32e40x_core_files)/jtag_dbg/*.v" \
+	                               -p	"read -sv $(cv32e40x_core_files)/uart/*.v" \
 																 -p	"read -sv $(cv32e40x_core_files)/common_pulp_cells/*.v" \
 																 -p	"read -sv $(cv32e40x_core_files)/../bhv/cv32e40x_sim_clock_gate.sv" \
                                  -p "hierarchy -top synth_top" \
