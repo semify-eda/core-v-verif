@@ -62,6 +62,7 @@ module tb_top
 
     // we either load the provided firmware or execute a small test program that
     // doesn't do more than an infinite loop with some I/O
+   /*
     initial begin: load_prog
         automatic string firmware;
         automatic int prog_size = 6;
@@ -76,7 +77,7 @@ module tb_top
             $finish;
         end
     end // block: load_prog
-
+*/
     initial begin: clock_gen
         forever begin
             #CLK_PHASE_HI core_clk = 1'b0;

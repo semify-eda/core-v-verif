@@ -16,7 +16,7 @@ module sp_byteram
     logic [ADDR_WIDTH-1:0]           addr_int;
 
    initial begin
-      $readmemh("./hello-world/hello-world.hex", mem);
+      $readmemh("/home/mario/sim_core/hello-world/hello-world.hex", mem);
    end
     always_comb addr_int = {addr_i[ADDR_WIDTH-1:2], 2'b0};
 

@@ -135,7 +135,7 @@ module cv32e40x_tb_wrapper import cv32e40x_pkg::*;
     // instantiate the core
     cv32e40x_core #(
                  .NUM_MHPMCOUNTERS (NUM_MHPMCOUNTERS),
-                    .B_EXT (1),
+                    .B_EXT (ZBA_ZBB_ZBC_ZBS), //ZBA_ZBB_ZBC_ZBS
                     .X_EXT (1'b1), //enable hardware for xtension interface
                     .X_NUM_RS (2)  // we need three read ports form memory, to read 3 sorce regs at the same time
                 )
