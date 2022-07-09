@@ -1,5 +1,5 @@
 module sp_byteram
-    #(parameter ADDR_WIDTH = 8,
+    #(parameter ADDR_WIDTH = 10,
       parameter INSTR_RDATA_WIDTH = 128)
     (input logic                  clk_i,
 
@@ -24,6 +24,19 @@ module sp_byteram
         for (int i = 0; i < INSTR_RDATA_WIDTH/8; i++) begin
             rdata_o[(i*8)+: 8] <= mem[addr_int +  i];
         end
-    end
+    
+    /*
+        if (en_i) begin
+             
+                if (we_i) begin
+                    if (be_i[0]) mem[addr_int    ] <= wdata_i[ 0+:8];
+                    if (be_i[1]) mem[addr_int + 1] <= wdata_i[ 8+:8];
+                    if (be_i[2]) mem[addr_int + 2] <= wdata_i[16+:8];
+                    if (be_i[3]) mem[addr_int + 3] <= wdata_i[24+:8];
+                end
+        end  
+     */
+    end    
+    
 
 endmodule // dp_ram

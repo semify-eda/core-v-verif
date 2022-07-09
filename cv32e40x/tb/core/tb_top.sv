@@ -62,7 +62,11 @@ module tb_top
 
     // we either load the provided firmware or execute a small test program that
     // doesn't do more than an infinite loop with some I/O
+<<<<<<< Updated upstream
    /*
+=======
+    /*
+>>>>>>> Stashed changes
     initial begin: load_prog
         automatic string firmware;
         automatic int prog_size = 6;
@@ -71,13 +75,17 @@ module tb_top
             if($test$plusargs("verbose"))
                 $display("[TESTBENCH] @ t=%0t: loading firmware %0s",
                          $time, firmware);
-            $readmemh(firmware, cv32e40x_tb_wrapper_i.ram_i.sp_byteram_i.mem);
+            $readmemh("/home/mario/sim_core/hello-world/hello-world.hex", cv32e40x_tb_wrapper_i.ram_i.sp_byteram_i.mem);
         end else begin
             $display("No firmware specified");
             $finish;
         end
     end // block: load_prog
+<<<<<<< Updated upstream
 */
+=======
+ */
+>>>>>>> Stashed changes
     initial begin: clock_gen
         forever begin
             #CLK_PHASE_HI core_clk = 1'b0;

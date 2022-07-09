@@ -6,7 +6,7 @@ verilog_tb_files := /home/mario/uni/sem10/bachelorarbeit/gitclone/semify_brle/co
 hexfile :=  /home/mario/uni/sem10/bachelorarbeit/gitclone/semify_brle/core-v-verif/cv32e40x/sim/core/hello-world/hello-world.hex
 yosys_exe := /run/media/mario/DATA_SSD/linux_data/gitclone/yosys/yosys
 
-all: yosys ulx3s_out ulx3s.bit prog_ulx3s
+all: yosys ulx3s_out ulx3s.bit prog
 
 cphex:
 	mkdir -p ./hello-world/
@@ -35,7 +35,8 @@ yosys: sv2v
 																 -p	"read -sv $(cv32e40x_core_files)/../bhv/cv32e40x_sim_clock_gate.sv" \
                                  -p "hierarchy -top synth_top" \
                                  -p "synth_ecp5" \
-                                 -p "json -o netlist.json"
+                                 -p "json -o netlist.json" \
+                                 -p "write_verilog synth.v"
 
 ulx3s_out:
 	nextpnr-ecp5 --85k --json netlist.json \
@@ -47,7 +48,7 @@ ulx3s_out:
 ulx3s.bit:
 	ecppack ulx3s_out.config ulx3s.bit
 
-prog_ulx3s:
+prog:
 	openFPGALoader --board=ulx3s ulx3s.bit
 
 clean:

@@ -34,9 +34,10 @@ module cv32e40x_tb_wrapper import cv32e40x_pkg::*;
      output logic [31:0] exit_value_o,
      output logic        exit_valid_o,
      input logic         ser_rx_i,
-     output logic        ser_tx_o
+     output logic        ser_tx_o,
+     output logic instr_req_o,
+     output logic instr_gnt_o
      );
-
 
     localparam JTAG_BOOT            = 'b0;
     localparam  CLUSTER_ID         = 6'd0;
@@ -53,6 +54,8 @@ module cv32e40x_tb_wrapper import cv32e40x_pkg::*;
     logic                        instr_rvalid;
     logic [31:0]                 instr_addr;
     logic [INSTR_RDATA_WIDTH-1:0] instr_rdata;
+
+     assign instr_req_o =  instr_req;
 
     logic                        data_req;
     logic                        data_gnt;
@@ -135,7 +138,11 @@ module cv32e40x_tb_wrapper import cv32e40x_pkg::*;
     // instantiate the core
     cv32e40x_core #(
                  .NUM_MHPMCOUNTERS (NUM_MHPMCOUNTERS),
+<<<<<<< Updated upstream
                     .B_EXT (ZBA_ZBB_ZBC_ZBS), //ZBA_ZBB_ZBC_ZBS
+=======
+                    .B_EXT (ZBA_ZBB_ZBC_ZBS),
+>>>>>>> Stashed changes
                     .X_EXT (1'b1), //enable hardware for xtension interface
                     .X_NUM_RS (2)  // we need three read ports form memory, to read 3 sorce regs at the same time
                 )
@@ -292,7 +299,7 @@ module cv32e40x_tb_wrapper import cv32e40x_pkg::*;
    // | |_| | | |/ ___ \ |_| |
    //  \___/  |_/_/   \_\____|
    
-
+/*
    // debug subsystem
     dmi_jtag #(
         .IdcodeValue          ( 32'h249511C3    )
@@ -353,9 +360,9 @@ module cv32e40x_tb_wrapper import cv32e40x_pkg::*;
        .dmi_resp_valid_o  ( jtag_resp_valid   ),
        .dmi_resp_ready_i  ( jtag_resp_ready   ),
        .dmi_resp_o        ( debug_resp        )
-    );
-
-   coproc coproc_i ( .clk_i (clk_i),
+    ); */
+/*
+  coproc coproc_i ( .clk_i (clk_i),
                       .rst_ni (rst_ni),
                       .xif_compressed (xif),
                       .xif_issue (xif),
@@ -366,6 +373,6 @@ module cv32e40x_tb_wrapper import cv32e40x_pkg::*;
                       .signals_csr_i (signals_csr_i),
                       .samples_csr_i (samples_csr_i));
    
-                                      
+        */                              
 
 endmodule // cv32e40x_tb_wrapper

@@ -272,7 +272,8 @@ VSIM_TB_FILES  := $(TBSRC_CORE)/tb_top.sv \
                $(TBSRC_CORE)/tb_riscv/riscv_gnt_stall.sv \
                $(TBSRC_CORE)/mm_ram.sv \
                $(TBSRC_CORE)/sp_byteram.sv \
-               $(TBSRC_CORE)/sp_4byteram.sv
+               $(TBSRC_CORE)/sp_4byteram.sv \
+               $(TBSRC_CORE)/synth_top.sv
 
 # Shorthand rules for convience
 CV_CORE_pkg: clone_$(CV_CORE_LC)_rtl

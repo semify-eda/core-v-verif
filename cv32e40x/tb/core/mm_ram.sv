@@ -131,8 +131,9 @@ module mm_ram #(
    logic                           uart_dwrite, uart_dread;
    logic [31:0]               uart_data_wdata;
    logic [31:0]               uart_data_rdata;
+   logic                      uart_wait;
 
-   
+  
    
 
 
@@ -180,7 +181,7 @@ module mm_ram #(
        write_div_reg = '0;
        uart_dwrite = '0;
        uart_dread = '0;
-       uart_data_wdata = '0;
+       uart_data_wdata = 0;
 
 
         // memory map:
@@ -193,7 +194,7 @@ module mm_ram #(
             instr_gnt_o    = '1;
             instr_rvalid_d = '1;
             ram_instr_req  = '1;
-            ram_instr_addr = instr_addr_i;
+            ram_instr_addr = instr_addr_i[RAM_ADDR_WIDTH-1:0];
 
         end
 
@@ -303,6 +304,7 @@ module mm_ram #(
                 end else if (data_addr_i >= UART_BASE && data_addr_i < UART_BASE + UART_LEN) begin
                    uart_dwrite = '1;
                    uart_data_wdata = data_wdata_i;
+                   
         
 
                 end else if ((data_addr_i >= SRAM_BASE && data_addr_i < SRAM_BASE + SRAM_LEN) ||
@@ -494,7 +496,7 @@ module mm_ram #(
         .en_i    ( ram_instr_req                      ),
         .addr_i  ( ram_instr_addr[RAM_ADDR_WIDTH-1:0] ),
         .wdata_i ( '0                                 ),	// Not writing so ignored
-        .rdata_o ( ram_instr_rdata                    ),
+        .rdata_o ( ram_instr_rdata                   ),
         .we_i    ( '0                                 ),
         .be_i    ( 4'b1111                            )	// Always want 32-bits
      );
@@ -532,7 +534,7 @@ module mm_ram #(
 		.reg_dat_re  (uart_dread),
 	  .reg_dat_di  (uart_data_wdata),
 		.reg_dat_do  (uart_data_rdata),
-		.reg_dat_wait()
+		.reg_dat_wait(uart_wait)
 	);
 
     // do the handshacking stuff by assuming we always react in one cycle
