@@ -73,6 +73,7 @@ vsim_defines := +firmware=./hello-world/hello-world.hex \
 compile:
 	#make /hello-world/hello-world.elf
 	make  /hello-world/hello-world.hex
+	make bin
 
 bintohex:
 	python ../../../../py/bintohex.py ./hello-world/hello-world.hex 392000 > ./hello-world/hello-world32.hex
@@ -106,6 +107,11 @@ histo:
 
 histo_only:
 	python ../../../../py/histogram.py
+
+bin:
+	rm ./hello-world/hello-world32.hex
+	vlog -work ./work -sv  $(TBSRC_CORE)/format_binary.sv
+	vsim -c ./work.format_binary -do "run -a"
 
 ##############################################################################
 

@@ -73,7 +73,7 @@ module mm_ram #(
     localparam int                    TIMER_IRQ_ID = 3;
 
     // mux for read and writes
-    enum logic [2:0]{RAM, DEBUG, ROM, UNMAP, IDLE_READ} select_rdata_d, select_rdata_q;
+    enum logic [2:0]{RAM, DEBUG, ROM, UNMAP, IDLE_READ, UART_READ} select_rdata_d, select_rdata_q;
 
     enum logic [1:0]{SB, CORE, IDLE_WRITE} select_wdata_d, select_wdata_q;
 
@@ -131,7 +131,12 @@ module mm_ram #(
    logic                           uart_dwrite, uart_dread;
    logic [31:0]               uart_data_wdata;
    logic [31:0]               uart_data_rdata;
+   logic                      uart_wait_i;
+   
 
+
+   logic                      uart_busy_SN, uart_busy_SP;
+   logic                      uart_wen_SN, uart_wen_SP; //uart_write_enable tell uart write data to ser_tx   
    
    
 
@@ -181,6 +186,9 @@ module mm_ram #(
        uart_dwrite = '0;
        uart_dread = '0;
        uart_data_wdata = '0;
+       uart_busy_SN = uart_wait_i;
+       uart_wen_SN = uart_wen_SP;
+       
 
 
         // memory map:
@@ -303,8 +311,10 @@ module mm_ram #(
                 end else if (data_addr_i >= UART_BASE && data_addr_i < UART_BASE + UART_LEN) begin
                    uart_dwrite = '1;
                    uart_data_wdata = data_wdata_i;
-        
-
+                   uart_busy_SN = 1'b1;
+                   uart_wen_SN = 1'b1;
+                   
+                   
                 end else if ((data_addr_i >= SRAM_BASE && data_addr_i < SRAM_BASE + SRAM_LEN) ||
                                              (data_addr_i >= 0 && data_addr_i < SRAM_LEN)) begin
                     select_wdata_d  = CORE;
@@ -356,6 +366,8 @@ module mm_ram #(
                     ram_data_we = data_we_i;
                     ram_data_be = data_be_i;
 
+                end else if (data_addr_i == UART_WAIT_STATUS) begin
+                   select_rdata_d = UART_READ;
                 end else begin
                     select_rdata_d = UNMAP;
                 end
@@ -433,6 +445,8 @@ module mm_ram #(
                 sb_rdata_o    = rom_rdata; //jal(5'b0, 21'h80);
                 instr_rdata_o = rom_rdata; //jal(5'b0, 21'h80);
             end
+        end else if (select_rdata_q == UART_READ) begin // if (select_rdata_q == ROM)
+           data_rdata_o = uart_wait_i;
 
         end else if (select_rdata_q == IDLE_READ) begin
         end
@@ -532,7 +546,7 @@ module mm_ram #(
 		.reg_dat_re  (uart_dread),
 	  .reg_dat_di  (uart_data_wdata),
 		.reg_dat_do  (uart_data_rdata),
-		.reg_dat_wait()
+		.reg_dat_wait(uart_wait_i)
 	);
 
     // do the handshacking stuff by assuming we always react in one cycle
@@ -561,6 +575,9 @@ module mm_ram #(
             sb_rvalid_q    <= '0;
             instr_rvalid_q <= '0;
 
+           uart_busy_SP <= '0;
+           uart_wen_SP <= '0;
+                      
         end else begin
             select_rdata_q <= select_rdata_d;
             select_wdata_q <= select_wdata_d;
@@ -569,6 +586,9 @@ module mm_ram #(
             sb_rvalid_q    <= sb_rvalid_d;
             instr_rvalid_q <= instr_rvalid_d;
 
+           uart_busy_SP <= uart_busy_SN;
+           uart_wen_SP <= uart_wen_SN;
+           
         end
     end
 

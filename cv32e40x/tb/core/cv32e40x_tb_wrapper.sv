@@ -18,7 +18,7 @@
 module cv32e40x_tb_wrapper import cv32e40x_pkg::*;   
    #(parameter // Parameters used by TB
                INSTR_RDATA_WIDTH = 32,
-                RAM_ADDR_WIDTH    = 20,
+                RAM_ADDR_WIDTH    = 12,
                 BOOT_ADDR         = 'h80,
                 DM_HALTADDRESS    = 32'h1A11_0800,
                 HART_ID           = 32'h0000_0000,
@@ -34,7 +34,9 @@ module cv32e40x_tb_wrapper import cv32e40x_pkg::*;
      output logic [31:0] exit_value_o,
      output logic        exit_valid_o,
      input logic         ser_rx_i,
-     output logic        ser_tx_o
+     output logic        ser_tx_o,
+     output logic        instr_req_o,
+     output logic        instr_gnt_o
      );
 
 
@@ -54,6 +56,8 @@ module cv32e40x_tb_wrapper import cv32e40x_pkg::*;
     logic [31:0]                 instr_addr;
     logic [INSTR_RDATA_WIDTH-1:0] instr_rdata;
 
+    assign instr_req_o =  instr_req;
+    assign instr_gnt_o =  instr_gnt;
     logic                        data_req;
     logic                        data_gnt;
     logic                         data_rvalid;

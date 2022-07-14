@@ -21,15 +21,9 @@ module sp_4byteram
    always_comb mem_addr = addr_i >> 2;
  
     always @(posedge clk_i) begin
-       //rdata_a_o <= mem[addr_a_i];
-       //for (int i = 0; i < INSTR_RDATA_WIDTH/8; i++) begin
-          //rdata_a_o[(i*8)+: 8] <= mem[addr_a_i + i];
-        //end
        rdata_o <= mem[mem_addr];
       
-        /* addr_b_i is the actual memory address referenced */
         if (en_i) begin
-            /* handle writes */
             if (we_i) begin  
                if (be_i[0]) mem[mem_addr] [0+:8]  <= wdata_i[ 0+:8];
                if (be_i[1]) mem[mem_addr] [8+:8] <= wdata_i[ 8+:8];
