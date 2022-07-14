@@ -13,8 +13,8 @@ module sp_byteram
     localparam bytes = (2**ADDR_WIDTH);
 
     logic [31:0]                      mem[bytes];
-    (* dont_touch = "true" *) logic [ADDR_WIDTH-1:0]           mem_addr;
-    (* dont_touch = "true" *) logic [31:0] rinstr; 
+    logic [ADDR_WIDTH-1:0]           mem_addr;
+    logic [31:0] rinstr; 
 
    initial begin
       $readmemh("/home/mario/sim_core/hello-world/hello-world32.hex", mem );
