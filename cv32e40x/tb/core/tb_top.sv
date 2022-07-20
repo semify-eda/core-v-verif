@@ -17,7 +17,7 @@
 
 module tb_top
     #(parameter INSTR_RDATA_WIDTH = 32,
-      parameter RAM_ADDR_WIDTH = 12,
+      parameter RAM_ADDR_WIDTH = 13,
       parameter BOOT_ADDR  = 'h80);
 
     // comment to record execution trace

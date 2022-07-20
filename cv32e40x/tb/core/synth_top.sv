@@ -75,7 +75,7 @@ module synth_top ( input clk_100mhz,
    cv32e40x_tb_wrapper
         #(
           .INSTR_RDATA_WIDTH (32),
-          .RAM_ADDR_WIDTH    (16),
+          .RAM_ADDR_WIDTH    (13),
           .BOOT_ADDR         ('h80)
          )
     cv32e40x_tb_wrapper_i
