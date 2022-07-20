@@ -47,7 +47,7 @@ SECTIONS
 
 
   /* NMI interrupt handler fixed entry point */
-  PROVIDE(__nmi_address = 0x1000);
+  PROVIDE(__nmi_address = 0x10000);
 
   .nmi (__nmi_address):
   {

@@ -1,5 +1,5 @@
 module sp_4byteram
-    #(parameter ADDR_WIDTH = 8,
+    #(parameter ADDR_WIDTH = 12,
       parameter INSTR_RDATA_WIDTH = 32)
     (input logic                  clk_i,
 
@@ -16,6 +16,9 @@ module sp_4byteram
    logic [31:0] mem[words];
    logic [ADDR_WIDTH-1:0]           mem_addr;
    
+   initial begin
+      $readmemh("/home/mario/sim_core/hello-world/hello-world32.hex", mem );
+   end
    //assign addr_a_int = {addr_a_i[ADDR_WIDTH-1:2], 2'b0};
 
    always_comb mem_addr = addr_i >> 2;

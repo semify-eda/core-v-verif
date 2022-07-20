@@ -313,7 +313,7 @@ RISCV_MARCH      = $(CV_SW_MARCH)
 RISCV_CC         = $(CV_SW_CC)
 RISCV_CFLAGS     = $(CV_SW_CFLAGS)
 
-CFLAGS ?= -fdata-sections -ffunction-sections -Os -g -static -mabi=ilp32 -Wl,--gc-sections -nostdlib\
+CFLAGS ?= -fdata-sections -ffunction-sections -O0 -g -static -mabi=ilp32 -Wl,--gc-sections -nostdlib\
 -march=$(RISCV_MARCH) -Wall $(RISCV_CFLAGS)
 
 $(warning RISCV set to $(RISCV))

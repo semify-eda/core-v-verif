@@ -36,7 +36,9 @@ module cv32e40x_tb_wrapper import cv32e40x_pkg::*;
      input logic         ser_rx_i,
      output logic        ser_tx_o,
      output logic        instr_req_o,
-     output logic        instr_gnt_o
+     output logic        instr_gnt_o,
+     output logic        jd_write_o,
+     output logic [7:0]  jd_write_data_o
      );
 
 
@@ -287,7 +289,9 @@ module cv32e40x_tb_wrapper import cv32e40x_pkg::*;
         .tests_passed_o ( tests_passed_o  ),
         .tests_failed_o ( tests_failed_o  ),
         .ser_rx_i (ser_rx_i),
-        .ser_tx_o (ser_tx_o)
+        .ser_tx_o (ser_tx_o),
+        .jd_write_o(jd_write_o),
+        .jd_write_data_o(jd_write_data_o)
     );
 
    //     _ _____  _    ____ 

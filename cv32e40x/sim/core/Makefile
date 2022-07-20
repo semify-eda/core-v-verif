@@ -109,7 +109,7 @@ histo_only:
 	python ../../../../py/histogram.py
 
 bin:
-	rm ./hello-world/hello-world32.hex
+	rm -f ./hello-world/hello-world32.hex
 	vlog -work ./work -sv  $(TBSRC_CORE)/format_binary.sv
 	vsim -c ./work.format_binary -do "run -a"
 

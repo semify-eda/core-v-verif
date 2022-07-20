@@ -21,7 +21,6 @@ module sp_byteram
    end
    // always_comb addr_int = {addr_i[ADDR_WIDTH-1:2], 2'b0};
    always_comb mem_addr = addr_i >> 2;
-   always_comb rinstr = mem[mem_addr];  
 
     always @(posedge clk_i) begin
 

@@ -1,23 +1,24 @@
 
 module synth_top ( input clk_100mhz,
-                   input rst_ni,
+                   input              rst_ni,
                    input [3:0]        BTN,
-                   input [3:0]        SW,      
-	               output logic [3:0] LED,
-	               output logic RGB0_Blue,
-	               output logic RGB0_Green,
-	               output logic RGB0_Red,
-	               output logic RGB1_Blue,
-	               output logic RGB1_Green,
-	               output logic RGB1_Red,
-	               output logic RGB2_Blue,
-	               output logic RGB2_Green,
-	               output logic RGB2_Red,
-	               output logic RGB3_Blue,
-	               output logic RGB3_Green,
-	               output logic RGB3_Red,
-                   output UART_TXD,
-                   input UART_RXD
+                   input [3:0]        SW, 
+	                 output logic [3:0] LED,
+	                 output logic       RGB0_Blue,
+	                 output logic       RGB0_Green,
+	                 output logic       RGB0_Red,
+	                 output logic       RGB1_Blue,
+	                 output logic       RGB1_Green,
+	                 output logic       RGB1_Red,
+	                 output logic       RGB2_Blue,
+	                 output logic       RGB2_Green,
+	                 output logic       RGB2_Red,
+	                 output logic       RGB3_Blue,
+	                 output logic       RGB3_Green,
+	                 output logic       RGB3_Red,
+                   output             UART_TXD,
+                   input              UART_RXD,
+                   output [7:0]       jd
                   );
                   
    logic clk_5mhz;
@@ -42,9 +43,14 @@ module synth_top ( input clk_100mhz,
    logic [31:0] cnt_SN, cnt_SP;
    logic [31:0] cnt2_SN, cnt2_SP;
 
+   logic [7:0] jd_DN, jd_DP, jd_write_data;
+   logic       jd_write;
+
    assign fetch_enable = 1'b1;
+   assign jd[7:0] = jd_DP[7:0];
    
-   clk_wiz_1 clk_div_i (.clk_in1 (clk_100mhz),
+   
+   clk_wiz_3 clk_div_i (.clk_in1 (clk_100mhz),
                                 .clk_out1 (clk_5mhz),
                                 .reset (~rst_ni));
    
@@ -56,7 +62,11 @@ module synth_top ( input clk_100mhz,
       LED[1] = instr_req;
       LED[2] = instr_gnt;
       LED[3] = clk_blink_SP;
+   
+      if (jd_write)
+        jd_DN = jd_write_data;
       
+   
    end
    
    assign UART_TXD = ser_tx;
@@ -65,7 +75,7 @@ module synth_top ( input clk_100mhz,
    cv32e40x_tb_wrapper
         #(
           .INSTR_RDATA_WIDTH (32),
-          .RAM_ADDR_WIDTH    (12),
+          .RAM_ADDR_WIDTH    (16),
           .BOOT_ADDR         ('h80)
          )
     cv32e40x_tb_wrapper_i
@@ -80,7 +90,9 @@ module synth_top ( input clk_100mhz,
          .ser_tx_o (ser_tx),
          .ser_rx_i (ser_rx),
          .instr_req_o (instr_req),
-         .instr_gnt_o (instr_gnt)
+         .instr_gnt_o (instr_gnt),
+         .jd_write_o (jd_write),
+         .jd_write_data_o (jd_write_data)
         );
 
    always_comb begin
@@ -113,6 +125,7 @@ module synth_top ( input clk_100mhz,
          clk_blink_SP <= 1'b0;
          cnt2_SP <= 1'b0;
          req_SP <= 1'b0;
+         jd_DP <= 'b0;
       end else begin
          tests_failed_SP <= tests_failed_SN;
          tests_passed_SP <= tests_passed_SN;
@@ -121,6 +134,8 @@ module synth_top ( input clk_100mhz,
          cnt2_SP <= cnt2_SN;
          clk_blink_SP <= clk_blink_SN;
          req_SP <= req_SN;
+         jd_DP <= jd_DN;
+         
       end
    end
          

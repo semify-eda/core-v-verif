@@ -1,0 +1,1 @@
+updatemem -force --meminfo mem.mmi.mmi --data /home/mario/uni/sem10/bachelorarbeit/gitclone/semify/wfg/brle/core-v-verif/cv32e40x/sim/core/hello-world/hello-world.elf --bit /home/mario/uni/sem10/bachelorarbeit/gitclone/semify/wfg/brle/vivado_cv32e40x/vivado_cv32e40x.runs/impl_1/synth_top.bit --proc dummy --out out.bit

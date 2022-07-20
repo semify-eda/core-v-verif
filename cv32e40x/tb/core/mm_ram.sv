@@ -64,8 +64,10 @@ module mm_ram #(
     output logic                         tests_passed_o,
     output logic                         tests_failed_o,
 
-   input ser_rx_i,
-   output ser_tx_o
+   input logic ser_rx_i,
+   output logic ser_tx_o,
+   output logic jd_write_o,
+   output logic [7:0] jd_write_data_o
 );
 
     import dm_memory_map_pkg::*;
@@ -188,6 +190,9 @@ module mm_ram #(
        uart_data_wdata = '0;
        uart_busy_SN = uart_wait_i;
        uart_wen_SN = uart_wen_SP;
+       
+       jd_write_o = 'b0;
+       jd_write_data_o[7:0] = 8'b0;
        
 
 
@@ -313,7 +318,10 @@ module mm_ram #(
                    uart_data_wdata = data_wdata_i;
                    uart_busy_SN = 1'b1;
                    uart_wen_SN = 1'b1;
-                   
+
+                end else if (data_addr_i == JD_OUTPUT) begin
+                   jd_write_o = 'b1;
+                   jd_write_data_o[7:0] = data_wdata_i[7:0];
                    
                 end else if ((data_addr_i >= SRAM_BASE && data_addr_i < SRAM_BASE + SRAM_LEN) ||
                                              (data_addr_i >= 0 && data_addr_i < SRAM_LEN)) begin
