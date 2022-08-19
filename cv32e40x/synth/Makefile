@@ -33,7 +33,7 @@ yosys: sv2v
 	                               -p	"read -sv $(cv32e40x_core_files)/uart/*.v" \
 																 -p	"read -sv $(cv32e40x_core_files)/common_pulp_cells/*.v" \
 																 -p	"read -sv $(cv32e40x_core_files)/../bhv/cv32e40x_sim_clock_gate.sv" \
-                                 -p "hierarchy -top synth_top" \
+                                 -p "hierarchy -top synth_top_ulx3s" \
                                  -p "synth_ecp5" \
                                  -p "json -o netlist.json" \
                                  -p "write_verilog synth.v"
