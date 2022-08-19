@@ -62,7 +62,8 @@ module synth_top ( input clk_100mhz,
       LED[1] = instr_req;
       LED[2] = instr_gnt;
       LED[3] = clk_blink_SP;
-   
+      jd_DN = jd_DP;
+      
       if (jd_write)
         jd_DN = jd_write_data;
       

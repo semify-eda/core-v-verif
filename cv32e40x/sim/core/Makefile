@@ -142,6 +142,10 @@ TEST         ?= hello-world
 # Common Makefiles:
 #  -Variables for RTL and other dependencies (e.g. RISCV-DV)
 include ../ExternalRepos.mk
+
+clone:
+	git clone -b $(CV_CORE_BRANCH) --single-branch $(CV_CORE_REPO) $(CV_CORE_PKG)
+
 #  -Core Firmware and the RISCV GCC Toolchain (SDK)
 include $(CORE_V_VERIF)/mk/Common.mk
 
