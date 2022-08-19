@@ -1,0 +1,11 @@
+===================================
+Configuration Memory information
+===================================
+File Format        HEX
+Interface          SMAPX8
+Size               64M
+Start Address      0x00000000
+End Address        0x03FFFFFF
+
+Addr1         Addr2         Date                    File(s)
+0x00000000    0x003A607B    Jul 18 16:56:49 2022    /home/mario/uni/sem10/bachelorarbeit/gitclone/semify/wfg/brle/vivado_cv32e40x/vivado_cv32e40x.runs/impl_1/synth_top.bit
